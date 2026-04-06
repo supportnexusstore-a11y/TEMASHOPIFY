@@ -1,0 +1,509 @@
+{% doc %}
+  @prompt
+    Create a FAQ accordion section for a product page with collapsible questions and answers. Each item should expand/collapse when clicked with a smooth animation. Include a "+" icon that rotates to "×" when open. Style it with a clean, minimal dark premium aesthetic — thin divider lines between items, bold question text, and subtle expand/collapse transitions. The section should support multiple FAQ items that can be customized in the theme editor (title and content for each). Match the style shown: left-aligned bold question text, "+" icon on the right, full-width rows with top/bottom borders.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-accordion-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-faq-accordion__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size }}px;
+    font-weight: 700;
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    color: {{ block.settings.text_color }};
+    text-align: {{ block.settings.title_alignment }};
+  }
+
+  .ai-faq-accordion__list-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-faq-accordion__item-{{ ai_gen_id }} {
+    border-top: {{ block.settings.divider_thickness }}px solid {{ block.settings.divider_color }};
+  }
+
+  .ai-faq-accordion__item-{{ ai_gen_id }}:last-child {
+    border-bottom: {{ block.settings.divider_thickness }}px solid {{ block.settings.divider_color }};
+  }
+
+  .ai-faq-accordion__button-{{ ai_gen_id }} {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ block.settings.item_padding }}px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 20px;
+  }
+
+  .ai-faq-accordion__question-{{ ai_gen_id }} {
+    font-size: {{ block.settings.question_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    flex: 1;
+  }
+
+  .ai-faq-accordion__icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ block.settings.icon_color }};
+    transition: transform 0.3s ease;
+  }
+
+  .ai-faq-accordion__icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-faq-accordion__item-{{ ai_gen_id }}.active .ai-faq-accordion__icon-{{ ai_gen_id }} {
+    transform: rotate(45deg);
+  }
+
+  .ai-faq-accordion__content-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .ai-faq-accordion__item-{{ ai_gen_id }}.active .ai-faq-accordion__content-{{ ai_gen_id }} {
+    max-height: 1000px;
+    padding-bottom: {{ block.settings.item_padding }}px;
+  }
+
+  .ai-faq-accordion__answer-{{ ai_gen_id }} {
+    font-size: {{ block.settings.answer_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.answer_color }};
+    margin: 0;
+  }
+
+  .ai-faq-accordion__answer-{{ ai_gen_id }} p {
+    margin: 0 0 12px;
+  }
+
+  .ai-faq-accordion__answer-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-faq-accordion__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.section_title_size }}px * 0.85);
+    }
+
+    .ai-faq-accordion__question-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.question_size }}px * 0.9);
+    }
+
+    .ai-faq-accordion__answer-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.answer_size }}px * 0.9);
+    }
+
+    .ai-faq-accordion__button-{{ ai_gen_id }} {
+      padding: {{ block.settings.item_padding | times: 0.8 }}px 0;
+    }
+
+    .ai-faq-accordion__item-{{ ai_gen_id }}.active .ai-faq-accordion__content-{{ ai_gen_id }} {
+      padding-bottom: {{ block.settings.item_padding | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<faq-accordion-{{ ai_gen_id }} class="ai-faq-accordion-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank %}
+    <h2 class="ai-faq-accordion__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+  {% endif %}
+
+  <ul class="ai-faq-accordion__list-{{ ai_gen_id }}">
+    {% for i in (1..10) %}
+      {% liquid
+        assign question_key = 'question_' | append: i
+        assign answer_key = 'answer_' | append: i
+        assign question = block.settings[question_key]
+        assign answer = block.settings[answer_key]
+      %}
+
+      {% if question != blank %}
+        <li class="ai-faq-accordion__item-{{ ai_gen_id }}" data-faq-item>
+          <button
+            class="ai-faq-accordion__button-{{ ai_gen_id }}"
+            aria-expanded="false"
+            data-faq-button
+          >
+            <h3 class="ai-faq-accordion__question-{{ ai_gen_id }}">{{ question }}</h3>
+            <span class="ai-faq-accordion__icon-{{ ai_gen_id }}" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-accordion__content-{{ ai_gen_id }}" data-faq-content>
+            {% if answer != blank %}
+              <div class="ai-faq-accordion__answer-{{ ai_gen_id }}">{{ answer }}</div>
+            {% endif %}
+          </div>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</faq-accordion-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FaqAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('[data-faq-item]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const button = item.querySelector('[data-faq-button]');
+          const content = item.querySelector('[data-faq-content]');
+
+          button.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            if (isActive) {
+              this.closeItem(item, button, content);
+            } else {
+              this.openItem(item, button, content);
+            }
+          });
+        });
+      }
+
+      openItem(item, button, content) {
+        item.classList.add('active');
+        button.setAttribute('aria-expanded', 'true');
+        content.style.maxHeight = content.scrollHeight + 'px';
+      }
+
+      closeItem(item, button, content) {
+        item.classList.remove('active');
+        button.setAttribute('aria-expanded', 'false');
+        content.style.maxHeight = '0';
+      }
+    }
+
+    customElements.define('faq-accordion-{{ ai_gen_id }}', FaqAccordion{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ accordion",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "range",
+      "id": "section_title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Title spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Question color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer color",
+      "default": "#b3b3b3"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "divider_thickness",
+      "label": "Divider thickness",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "Item padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "FAQ 1"
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_1",
+      "label": "Answer",
+      "default": "<p>We offer a 30-day return policy on all products. Items must be unused and in their original packaging.</p>"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 2"
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question",
+      "default": "How long does shipping take?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_2",
+      "label": "Answer",
+      "default": "<p>Standard shipping takes 5-7 business days. Express shipping is available for 2-3 business days delivery.</p>"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 3"
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question",
+      "default": "Do you ship internationally?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_3",
+      "label": "Answer",
+      "default": "<p>Yes, we ship to over 50 countries worldwide. International shipping times vary by location.</p>"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 4"
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_4",
+      "label": "Answer"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 5"
+    },
+    {
+      "type": "text",
+      "id": "question_5",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_5",
+      "label": "Answer"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 6"
+    },
+    {
+      "type": "text",
+      "id": "question_6",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_6",
+      "label": "Answer"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 7"
+    },
+    {
+      "type": "text",
+      "id": "question_7",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_7",
+      "label": "Answer"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 8"
+    },
+    {
+      "type": "text",
+      "id": "question_8",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_8",
+      "label": "Answer"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 9"
+    },
+    {
+      "type": "text",
+      "id": "question_9",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_9",
+      "label": "Answer"
+    },
+    {
+      "type": "header",
+      "content": "FAQ 10"
+    },
+    {
+      "type": "text",
+      "id": "question_10",
+      "label": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer_10",
+      "label": "Answer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ accordion"
+    }
+  ]
+}
+{% endschema %}

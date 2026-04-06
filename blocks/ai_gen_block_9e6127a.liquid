@@ -1,0 +1,678 @@
+{% doc %}
+  @prompt
+    Create a product comparison table section that matches this exact design:
+    
+    LAYOUT:
+    - Small centered subtitle text above: "COMO COMPARAMOS"
+    - Large bold centered heading below subtitle: "PORQUE É QUE OS CLIENTES ESCOLHEM"
+    - Two-column comparison table centered on the page (about 60-70% width), below the headings
+    
+    TABLE DESIGN:
+    - Left column: yellow/gold background (#FFD700), with a product image at the top (overlapping slightly above the table), bold uppercase white text for features, dark checkmark ✓ icons
+    - Right column: white/light background, "OUTRAS Consolas" header text in bold red, dark ✗ icons with small description text below each
+    
+    TABLE ROWS (5 rows):
+    1. "1 ANO GARANTIA" (left ✓) | "Sem garantia" (right ✗)
+    2. "PELÍCULA DE OFERTA" (left ✓) | "Sem ofertas" (right ✗)
+    3. "POSSIBILIDADE DEVOLUÇÃO" (left ✓) | "Sem devoluções" (right ✗)
+    4. "+15000 JOGOS" (left ✓) | "Menos jogos" (right ✗)
+    5. "ECRÃ DE ALTA RESOLUÇÃO" (left ✓) | "Ecrã de baixa resolução" (right ✗)
+    
+    FOOTER: Small centered text at bottom: "Garantia de 14 dias de devolução do dinheiro" with a shield icon
+    
+    All content should be editable in the theme editor. The product image in the left column header should also be customizable.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-comparison-table-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+    background-color: {{ block.settings.section_background }};
+  }
+
+  .ai-comparison-table__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.desktop_width_percent }}%;
+    margin: 0 auto;
+  }
+
+  .ai-comparison-table__subtitle-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-comparison-table__heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 40px;
+    text-transform: uppercase;
+  }
+
+  .ai-comparison-table__table-wrapper-{{ ai_gen_id }} {
+    overflow-x: auto;
+  }
+
+  .ai-comparison-table__table-{{ ai_gen_id }} {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: {{ block.settings.table_border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-comparison-table__header-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-comparison-table__header-cell-{{ ai_gen_id }} {
+    padding: 60px 20px 20px;
+    text-align: center;
+    vertical-align: bottom;
+  }
+
+  .ai-comparison-table__header-cell-{{ ai_gen_id }}--left {
+    background-color: {{ block.settings.left_column_bg }};
+    position: relative;
+  }
+
+  .ai-comparison-table__header-cell-{{ ai_gen_id }}--right {
+    background-color: {{ block.settings.right_column_bg }};
+  }
+
+  .ai-comparison-table__product-image-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    z-index: 2;
+  }
+
+  .ai-comparison-table__product-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .ai-comparison-table__product-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-comparison-table__product-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  .ai-comparison-table__header-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.column_header_size }}px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .ai-comparison-table__header-title-{{ ai_gen_id }}--left {
+    color: {{ block.settings.left_header_text_color }};
+  }
+
+  .ai-comparison-table__header-title-{{ ai_gen_id }}--right {
+    color: {{ block.settings.right_header_text_color }};
+  }
+
+  .ai-comparison-table__body-{{ ai_gen_id }} tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-comparison-table__body-{{ ai_gen_id }} tr:last-child {
+    border-bottom: none;
+  }
+
+  .ai-comparison-table__cell-{{ ai_gen_id }} {
+    padding: 24px 20px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .ai-comparison-table__cell-{{ ai_gen_id }}--left {
+    background-color: {{ block.settings.left_column_bg }};
+  }
+
+  .ai-comparison-table__cell-{{ ai_gen_id }}--right {
+    background-color: {{ block.settings.right_column_bg }};
+  }
+
+  .ai-comparison-table__feature-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.feature_text_size }}px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+
+  .ai-comparison-table__feature-text-{{ ai_gen_id }}--left {
+    color: {{ block.settings.left_feature_text_color }};
+  }
+
+  .ai-comparison-table__feature-text-{{ ai_gen_id }}--right {
+    color: {{ block.settings.right_feature_text_color }};
+  }
+
+  .ai-comparison-table__icon-{{ ai_gen_id }} {
+    font-size: {{ block.settings.icon_size }}px;
+    line-height: 1;
+  }
+
+  .ai-comparison-table__icon-{{ ai_gen_id }}--check {
+    color: {{ block.settings.check_icon_color }};
+  }
+
+  .ai-comparison-table__icon-{{ ai_gen_id }}--cross {
+    color: {{ block.settings.cross_icon_color }};
+  }
+
+  .ai-comparison-table__description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_text_size }}px;
+    color: {{ block.settings.right_description_color }};
+    margin: 8px 0 0;
+  }
+
+  .ai-comparison-table__footer-{{ ai_gen_id }} {
+    text-align: center;
+    margin-top: 30px;
+    font-size: {{ block.settings.footer_text_size }}px;
+    color: {{ block.settings.footer_text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .ai-comparison-table__footer-icon-{{ ai_gen_id }} {
+    font-size: {{ block.settings.footer_icon_size }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-comparison-table__container-{{ ai_gen_id }} {
+      max-width: 100%;
+    }
+
+    .ai-comparison-table__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-comparison-table__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.8 }}px;
+    }
+
+    .ai-comparison-table__product-image-wrapper-{{ ai_gen_id }} {
+      width: 80px;
+      height: 80px;
+      top: -30px;
+    }
+
+    .ai-comparison-table__header-cell-{{ ai_gen_id }} {
+      padding: 50px 12px 16px;
+    }
+
+    .ai-comparison-table__cell-{{ ai_gen_id }} {
+      padding: 16px 12px;
+    }
+
+    .ai-comparison-table__feature-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.feature_text_size | times: 0.85 }}px;
+    }
+
+    .ai-comparison-table__column-header-{{ ai_gen_id }} {
+      font-size: {{ block.settings.column_header_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<product-comparison-table-{{ ai_gen_id }}
+  class="ai-comparison-table-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-comparison-table__container-{{ ai_gen_id }}">
+    {% if block.settings.subtitle != blank %}
+      <div class="ai-comparison-table__subtitle-{{ ai_gen_id }}">
+        {{ block.settings.subtitle }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-comparison-table__heading-{{ ai_gen_id }}">
+        {{ block.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="ai-comparison-table__table-wrapper-{{ ai_gen_id }}">
+      <table class="ai-comparison-table__table-{{ ai_gen_id }}">
+        <thead class="ai-comparison-table__header-{{ ai_gen_id }}">
+          <tr>
+            <th class="ai-comparison-table__header-cell-{{ ai_gen_id }} ai-comparison-table__header-cell-{{ ai_gen_id }}--left">
+              <div class="ai-comparison-table__product-image-wrapper-{{ ai_gen_id }}">
+                {% if block.settings.product_image %}
+                  <img
+                    src="{{ block.settings.product_image | image_url: width: 240 }}"
+                    alt="{{ block.settings.product_image.alt | escape }}"
+                    class="ai-comparison-table__product-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="120"
+                    height="120"
+                  >
+                {% else %}
+                  <div class="ai-comparison-table__product-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+              {% if block.settings.left_column_header != blank %}
+                <h3 class="ai-comparison-table__header-title-{{ ai_gen_id }} ai-comparison-table__header-title-{{ ai_gen_id }}--left">
+                  {{ block.settings.left_column_header }}
+                </h3>
+              {% endif %}
+            </th>
+            <th class="ai-comparison-table__header-cell-{{ ai_gen_id }} ai-comparison-table__header-cell-{{ ai_gen_id }}--right">
+              {% if block.settings.right_column_header != blank %}
+                <h3 class="ai-comparison-table__header-title-{{ ai_gen_id }} ai-comparison-table__header-title-{{ ai_gen_id }}--right">
+                  {{ block.settings.right_column_header }}
+                </h3>
+              {% endif %}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="ai-comparison-table__body-{{ ai_gen_id }}">
+          {% for i in (1..5) %}
+            {% liquid
+              assign feature_key = 'feature_' | append: i
+              assign description_key = 'feature_' | append: i | append: '_description'
+              assign feature = block.settings[feature_key]
+              assign description = block.settings[description_key]
+            %}
+            {% if feature != blank %}
+              <tr>
+                <td class="ai-comparison-table__cell-{{ ai_gen_id }} ai-comparison-table__cell-{{ ai_gen_id }}--left">
+                  <div class="ai-comparison-table__feature-text-{{ ai_gen_id }} ai-comparison-table__feature-text-{{ ai_gen_id }}--left">
+                    {{ feature }}
+                  </div>
+                  <div class="ai-comparison-table__icon-{{ ai_gen_id }} ai-comparison-table__icon-{{ ai_gen_id }}--check">
+                    ✓
+                  </div>
+                </td>
+                <td class="ai-comparison-table__cell-{{ ai_gen_id }} ai-comparison-table__cell-{{ ai_gen_id }}--right">
+                  <div class="ai-comparison-table__icon-{{ ai_gen_id }} ai-comparison-table__icon-{{ ai_gen_id }}--cross">
+                    ✗
+                  </div>
+                  {% if description != blank %}
+                    <div class="ai-comparison-table__description-{{ ai_gen_id }}">
+                      {{ description }}
+                    </div>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if block.settings.footer_text != blank %}
+      <div class="ai-comparison-table__footer-{{ ai_gen_id }}">
+        <span class="ai-comparison-table__footer-icon-{{ ai_gen_id }}">{{ block.settings.footer_icon }}</span>
+        <span>{{ block.settings.footer_text }}</span>
+      </div>
+    {% endif %}
+  </div>
+</product-comparison-table-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductComparisonTable{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('product-comparison-table-{{ ai_gen_id }}', ProductComparisonTable{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Tabela de comparação",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Cabeçalho"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "COMO COMPARAMOS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "PORQUE É QUE OS CLIENTES ESCOLHEM"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Tamanho do subtítulo",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Tamanho do título",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Cor do subtítulo",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Cor do título",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Tabela"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Largura no desktop",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "table_border_radius",
+      "label": "Raio da borda",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Coluna esquerda"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Imagem do produto"
+    },
+    {
+      "type": "text",
+      "id": "left_column_header",
+      "label": "Cabeçalho da coluna"
+    },
+    {
+      "type": "color",
+      "id": "left_column_bg",
+      "label": "Cor de fundo",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "left_header_text_color",
+      "label": "Cor do texto do cabeçalho",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "left_feature_text_color",
+      "label": "Cor do texto das características",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Coluna direita"
+    },
+    {
+      "type": "text",
+      "id": "right_column_header",
+      "label": "Cabeçalho da coluna",
+      "default": "OUTRAS Consolas"
+    },
+    {
+      "type": "color",
+      "id": "right_column_bg",
+      "label": "Cor de fundo",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "color",
+      "id": "right_header_text_color",
+      "label": "Cor do texto do cabeçalho",
+      "default": "#DC143C"
+    },
+    {
+      "type": "color",
+      "id": "right_feature_text_color",
+      "label": "Cor do texto das características",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "right_description_color",
+      "label": "Cor do texto da descrição",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Características"
+    },
+    {
+      "type": "text",
+      "id": "feature_1",
+      "label": "Característica 1",
+      "default": "1 ANO GARANTIA"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_description",
+      "label": "Descrição 1",
+      "default": "Sem garantia"
+    },
+    {
+      "type": "text",
+      "id": "feature_2",
+      "label": "Característica 2",
+      "default": "PELÍCULA DE OFERTA"
+    },
+    {
+      "type": "text",
+      "id": "feature_2_description",
+      "label": "Descrição 2",
+      "default": "Sem ofertas"
+    },
+    {
+      "type": "text",
+      "id": "feature_3",
+      "label": "Característica 3",
+      "default": "POSSIBILIDADE DEVOLUÇÃO"
+    },
+    {
+      "type": "text",
+      "id": "feature_3_description",
+      "label": "Descrição 3",
+      "default": "Sem devoluções"
+    },
+    {
+      "type": "text",
+      "id": "feature_4",
+      "label": "Característica 4",
+      "default": "+15000 JOGOS"
+    },
+    {
+      "type": "text",
+      "id": "feature_4_description",
+      "label": "Descrição 4",
+      "default": "Menos jogos"
+    },
+    {
+      "type": "text",
+      "id": "feature_5",
+      "label": "Característica 5",
+      "default": "ECRÃ DE ALTA RESOLUÇÃO"
+    },
+    {
+      "type": "text",
+      "id": "feature_5_description",
+      "label": "Descrição 5",
+      "default": "Ecrã de baixa resolução"
+    },
+    {
+      "type": "header",
+      "content": "Estilo"
+    },
+    {
+      "type": "range",
+      "id": "column_header_size",
+      "label": "Tamanho do cabeçalho da coluna",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size",
+      "label": "Tamanho do texto da característica",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "description_text_size",
+      "label": "Tamanho do texto da descrição",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Tamanho do ícone",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "check_icon_color",
+      "label": "Cor do ícone de verificação",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "cross_icon_color",
+      "label": "Cor do ícone de cruz",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Rodapé"
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Texto do rodapé",
+      "default": "Garantia de 14 dias de devolução do dinheiro"
+    },
+    {
+      "type": "text",
+      "id": "footer_icon",
+      "label": "Ícone do rodapé",
+      "default": "🛡️"
+    },
+    {
+      "type": "range",
+      "id": "footer_text_size",
+      "label": "Tamanho do texto do rodapé",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "footer_icon_size",
+      "label": "Tamanho do ícone do rodapé",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "footer_text_color",
+      "label": "Cor do texto do rodapé",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Fundo"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Cor de fundo da secção",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabela de comparação"
+    }
+  ]
+}
+{% endschema %}

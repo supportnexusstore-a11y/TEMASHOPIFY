@@ -1,0 +1,516 @@
+{% doc %}
+  @prompt
+    Create a statistics/benefits section with this exact layout:
+    
+    HEADER:
+    - Centered heading text (e.g. "Beneficios comprobados, resultados comprobados") in regular weight, not too large
+    
+    3 COLUMNS of stats side by side:
+    - Each column has a large bold percentage number (e.g. "80%", "75%", "74%") in very large font
+    - Below the percentage: a short bold subtitle (e.g. "Melhora a qualidade do sono")
+    - Below the subtitle: a small italic or light citation/description text in smaller font
+    - Clean white or light background, no borders or shadows
+    - Numbers should animate/count up when scrolled into view (count-up animation)
+    - Columns evenly spaced
+    
+    All content editable in theme editor:
+    - Section heading
+    - For each of 3 stats: percentage number, subtitle text, description/citation text
+    - Colors and font sizes customizable
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-stats-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-stats-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.desktop_width_percent }}%;
+    margin: 0 auto;
+  }
+
+  .ai-stats-heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 40px;
+  }
+
+  .ai-stats-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .ai-stats-column-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-stats-number-{{ ai_gen_id }} {
+    font-size: {{ block.settings.number_size }}px;
+    font-weight: {{ block.settings.number_weight }};
+    color: {{ block.settings.number_color }};
+    margin: 0 0 12px;
+    line-height: 1.1;
+  }
+
+  .ai-stats-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    font-weight: {{ block.settings.subtitle_weight }};
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 0 8px;
+  }
+
+  .ai-stats-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    font-style: {{ block.settings.description_style }};
+    font-weight: {{ block.settings.description_weight }};
+    color: {{ block.settings.description_color }};
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-stats-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .ai-stats-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+      margin-bottom: 30px;
+    }
+
+    .ai-stats-number-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.number_size }}px * 0.75);
+    }
+  }
+{% endstyle %}
+
+<stats-counter-{{ ai_gen_id }} class="ai-stats-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-stats-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-stats-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="ai-stats-grid-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign stat_number_key = 'stat_' | append: i | append: '_number'
+          assign stat_subtitle_key = 'stat_' | append: i | append: '_subtitle'
+          assign stat_description_key = 'stat_' | append: i | append: '_description'
+
+          assign stat_number = block.settings[stat_number_key]
+          assign stat_subtitle = block.settings[stat_subtitle_key]
+          assign stat_description = block.settings[stat_description_key]
+        %}
+
+        <div class="ai-stats-column-{{ ai_gen_id }}">
+          <div
+            class="ai-stats-number-{{ ai_gen_id }}"
+            data-target="{{ stat_number }}"
+            data-stat-index="{{ i }}"
+          >
+            0{{ block.settings.stat_suffix }}
+          </div>
+          {% if stat_subtitle != blank %}
+            <div class="ai-stats-subtitle-{{ ai_gen_id }}">{{ stat_subtitle }}</div>
+          {% endif %}
+          {% if stat_description != blank %}
+            <div class="ai-stats-description-{{ ai_gen_id }}">{{ stat_description }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</stats-counter-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class StatsCounter{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.hasAnimated = false;
+      }
+
+      connectedCallback() {
+        this.statNumbers = this.querySelectorAll('.ai-stats-number-{{ ai_gen_id }}');
+        this.setupIntersectionObserver();
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.3
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.hasAnimated) {
+              this.hasAnimated = true;
+              this.animateCounters();
+            }
+          });
+        }, options);
+
+        observer.observe(this);
+      }
+
+      animateCounters() {
+        this.statNumbers.forEach((numberElement) => {
+          const target = parseFloat(numberElement.getAttribute('data-target'));
+          const suffix = '{{ block.settings.stat_suffix }}';
+          const duration = {{ block.settings.animation_duration }};
+          const startTime = performance.now();
+
+          const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const current = target * easeOutQuart;
+
+            if (Number.isInteger(target)) {
+              numberElement.textContent = Math.round(current) + suffix;
+            } else {
+              numberElement.textContent = current.toFixed(1) + suffix;
+            }
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              if (Number.isInteger(target)) {
+                numberElement.textContent = target + suffix;
+              } else {
+                numberElement.textContent = target.toFixed(1) + suffix;
+              }
+            }
+          };
+
+          requestAnimationFrame(animate);
+        });
+      }
+    }
+
+    customElements.define('stats-counter-{{ ai_gen_id }}', StatsCounter{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Statistics section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Benefícios comprovados, resultados comprovados"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 90
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Heading style"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Statistics"
+    },
+    {
+      "type": "text",
+      "id": "stat_suffix",
+      "label": "Number suffix",
+      "default": "%"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 500,
+      "max": 3000,
+      "step": 100,
+      "unit": "ms",
+      "default": 2000
+    },
+    {
+      "type": "header",
+      "content": "Number style"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Size",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "select",
+      "id": "number_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra bold"
+        },
+        {
+          "value": "900",
+          "label": "Black"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Subtitle style"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Size",
+      "min": 12,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Description style"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "description_style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ],
+      "default": "italic"
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        }
+      ],
+      "default": "300"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 1"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_number",
+      "label": "Number",
+      "default": "80"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_subtitle",
+      "label": "Subtitle",
+      "default": "Melhora a qualidade do sono"
+    },
+    {
+      "type": "textarea",
+      "id": "stat_1_description",
+      "label": "Description",
+      "default": "Estudo clínico com 500 participantes"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 2"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_number",
+      "label": "Number",
+      "default": "75"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_subtitle",
+      "label": "Subtitle",
+      "default": "Reduz o stress diário"
+    },
+    {
+      "type": "textarea",
+      "id": "stat_2_description",
+      "label": "Description",
+      "default": "Baseado em avaliações de utilizadores"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 3"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_number",
+      "label": "Number",
+      "default": "74"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_subtitle",
+      "label": "Subtitle",
+      "default": "Aumenta a energia matinal"
+    },
+    {
+      "type": "textarea",
+      "id": "stat_3_description",
+      "label": "Description",
+      "default": "Resultados após 30 dias de uso"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statistics section"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,473 @@
+{% doc %}
+  @prompt
+    Create a statistics section with 3 columns showing animated percentage numbers. The animation must re-trigger every time the section enters the viewport (not just once).
+    
+    Technical implementation (follow exactly):
+    - Simple div wrapper with class "stats-animation-wrapper" and a unique data attribute
+    - Each number element has data-target and data-suffix attributes
+    - Plain vanilla JavaScript only - NO custom elements, NO class extends HTMLElement, NO customElements.define
+    - IntersectionObserver watches the wrapper div with threshold: 0.2
+    - When section enters viewport: start count-up animation from 0 to target
+    - When section leaves viewport (isIntersecting is false): reset all numbers back to "0" + suffix
+    - This means the animation replays every time user scrolls back to the section
+    - NO hasAnimated flag - animation must repeat every time
+    - Use requestAnimationFrame with easeOutQuart easing
+    - Call init on DOMContentLoaded, immediately if DOM already loaded, and on shopify:section:load event
+    
+    Layout:
+    - Centered heading "Benefícios comprovados, resultados comprovados"
+    - 3 equal columns with large bold numbers (80%, 75%, 74%)
+    - Bold subtitle below each number
+    - Small italic description text below subtitle
+    - Clean white background, no borders or shadows
+    - Responsive: single column on mobile
+    
+    All editable in theme editor:
+    - Section heading, heading color, heading size
+    - For each of 3 stats: number (range 0-100), suffix text (default "%"), subtitle, description
+    - Number color, size
+    - Subtitle color, size
+    - Description color, size
+    - Animation duration in ms
+    - Background color
+    - Max content width
+    - Section padding
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-stats-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+    width: 100%;
+  }
+
+  .ai-stats-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-stats-heading-{{ ai_gen_id }} {
+    text-align: center;
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 40px;
+    font-weight: 700;
+  }
+
+  .ai-stats-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .ai-stats-item-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-stats-number-{{ ai_gen_id }} {
+    color: {{ block.settings.number_color }};
+    font-size: {{ block.settings.number_size }}px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    line-height: 1;
+  }
+
+  .ai-stats-subtitle-{{ ai_gen_id }} {
+    color: {{ block.settings.subtitle_color }};
+    font-size: {{ block.settings.subtitle_size }}px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  .ai-stats-description-{{ ai_gen_id }} {
+    color: {{ block.settings.description_color }};
+    font-size: {{ block.settings.description_size }}px;
+    font-style: italic;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-stats-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .ai-stats-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+      margin-bottom: 30px;
+    }
+
+    .ai-stats-number-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.number_size }}px * 0.8);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-stats-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-stats-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-stats-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="stats-animation-wrapper" data-stats-id="{{ ai_gen_id }}">
+      <div class="ai-stats-grid-{{ ai_gen_id }}">
+        <div class="ai-stats-item-{{ ai_gen_id }}">
+          <div
+            class="ai-stats-number-{{ ai_gen_id }}"
+            data-target="{{ block.settings.stat_1_number }}"
+            data-suffix="{{ block.settings.stat_1_suffix }}"
+          >
+            0{{ block.settings.stat_1_suffix }}
+          </div>
+          {% if block.settings.stat_1_subtitle != blank %}
+            <div class="ai-stats-subtitle-{{ ai_gen_id }}">{{ block.settings.stat_1_subtitle }}</div>
+          {% endif %}
+          {% if block.settings.stat_1_description != blank %}
+            <p class="ai-stats-description-{{ ai_gen_id }}">{{ block.settings.stat_1_description }}</p>
+          {% endif %}
+        </div>
+
+        <div class="ai-stats-item-{{ ai_gen_id }}">
+          <div
+            class="ai-stats-number-{{ ai_gen_id }}"
+            data-target="{{ block.settings.stat_2_number }}"
+            data-suffix="{{ block.settings.stat_2_suffix }}"
+          >
+            0{{ block.settings.stat_2_suffix }}
+          </div>
+          {% if block.settings.stat_2_subtitle != blank %}
+            <div class="ai-stats-subtitle-{{ ai_gen_id }}">{{ block.settings.stat_2_subtitle }}</div>
+          {% endif %}
+          {% if block.settings.stat_2_description != blank %}
+            <p class="ai-stats-description-{{ ai_gen_id }}">{{ block.settings.stat_2_description }}</p>
+          {% endif %}
+        </div>
+
+        <div class="ai-stats-item-{{ ai_gen_id }}">
+          <div
+            class="ai-stats-number-{{ ai_gen_id }}"
+            data-target="{{ block.settings.stat_3_number }}"
+            data-suffix="{{ block.settings.stat_3_suffix }}"
+          >
+            0{{ block.settings.stat_3_suffix }}
+          </div>
+          {% if block.settings.stat_3_subtitle != blank %}
+            <div class="ai-stats-subtitle-{{ ai_gen_id }}">{{ block.settings.stat_3_subtitle }}</div>
+          {% endif %}
+          {% if block.settings.stat_3_description != blank %}
+            <p class="ai-stats-description-{{ ai_gen_id }}">{{ block.settings.stat_3_description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initStatsAnimation{{ ai_gen_id }}() {
+      const wrapper = document.querySelector('[data-stats-id="{{ ai_gen_id }}"]');
+      if (!wrapper) return;
+
+      const numberElements = wrapper.querySelectorAll('[data-target]');
+      const duration = {{ block.settings.animation_duration }};
+
+      function easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+      }
+
+      function animateNumber(element, target, suffix) {
+        const startTime = performance.now();
+
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeOutQuart(progress);
+          const currentValue = Math.floor(easedProgress * target);
+
+          element.textContent = currentValue + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      function resetNumbers() {
+        numberElements.forEach(function(element) {
+          const suffix = element.getAttribute('data-suffix');
+          element.textContent = '0' + suffix;
+        });
+      }
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            numberElements.forEach(function(element) {
+              const target = parseInt(element.getAttribute('data-target'), 10);
+              const suffix = element.getAttribute('data-suffix');
+              animateNumber(element, target, suffix);
+            });
+          } else {
+            resetNumbers();
+          }
+        });
+      }, {
+        threshold: 0.2
+      });
+
+      observer.observe(wrapper);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initStatsAnimation{{ ai_gen_id }});
+    } else {
+      initStatsAnimation{{ ai_gen_id }}();
+    }
+
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.target.querySelector('[data-stats-id="{{ ai_gen_id }}"]')) {
+        initStatsAnimation{{ ai_gen_id }}();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Animated statistics",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Benefícios comprovados, resultados comprovados"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Statistic 1"
+    },
+    {
+      "type": "range",
+      "id": "stat_1_number",
+      "label": "Number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "text",
+      "id": "stat_1_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_subtitle",
+      "label": "Subtitle",
+      "default": "Aumento de produtividade"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_description",
+      "label": "Description",
+      "default": "Relatado por utilizadores em 30 dias"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 2"
+    },
+    {
+      "type": "range",
+      "id": "stat_2_number",
+      "label": "Number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 75
+    },
+    {
+      "type": "text",
+      "id": "stat_2_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_subtitle",
+      "label": "Subtitle",
+      "default": "Satisfação do cliente"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_description",
+      "label": "Description",
+      "default": "Baseado em 5000+ avaliações"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 3"
+    },
+    {
+      "type": "range",
+      "id": "stat_3_number",
+      "label": "Number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 74
+    },
+    {
+      "type": "text",
+      "id": "stat_3_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_subtitle",
+      "label": "Subtitle",
+      "default": "Recomendariam a amigos"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_description",
+      "label": "Description",
+      "default": "Taxa de recomendação verificada"
+    },
+    {
+      "type": "header",
+      "content": "Number style"
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Size",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Subtitle style"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Description style"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Duration",
+      "min": 500,
+      "max": 3000,
+      "step": 100,
+      "unit": "ms",
+      "default": 2000
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Animated statistics"
+    }
+  ]
+}
+{% endschema %}

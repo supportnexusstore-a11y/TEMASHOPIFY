@@ -1,0 +1,337 @@
+{% doc %}
+  @prompt
+    Create a Shopify Liquid section called "Compra por categoria" with this EXACT CSS grid layout: a 2-column grid where the left column is 40% width and the right column is 60% width. The left column has 1 tall card spanning full height. The right column has a 2x2 grid of 4 cards. All cards use object-fit cover background images. Card height on the left: match the total height of the 2x2 grid on the right (each small card is about 200px tall with a gap, so left card is about 410px). Each card has: border-radius 10px, overflow hidden, position relative, and a linear-gradient overlay from transparent to rgba(0,0,0,0.6) at the bottom. A white bold uppercase label sits at bottom-left with padding 12px. Section background is white. Gap between all cards is 10px. Section has padding 40px 60px. Title "Compra por categoria" is centered, font-weight bold, margin-bottom 20px. Each card is an anchor tag linking to a collection URL. Settings in schema allow customizing: section title, and for each of the 5 cards: image, label text, and collection URL link.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-shop-by-category-{{ ai_gen_id }} {
+    background-color: #ffffff;
+    padding: 40px 60px;
+    width: 100%;
+    display: block;
+  }
+
+  .ai-shop-by-category__title-{{ ai_gen_id }} {
+    text-align: center;
+    font-weight: bold;
+    margin: 0 0 20px;
+    font-size: 28px;
+    color: #121212;
+  }
+
+  .ai-shop-by-category__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+ .ai-shop-by-category__left-column-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ai-shop-by-category__right-column-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .ai-shop-by-category__card-{{ ai_gen_id }} {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    height: 100%;
+  }
+
+  .ai-shop-by-category__card--tall-{{ ai_gen_id }} {
+    height: 410px;
+  }
+
+  .ai-shop-by-category__card--small-{{ ai_gen_id }} {
+    height: 200px;
+  }
+
+  .ai-shop-by-category__card-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-shop-by-category__card-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-shop-by-category__card-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-shop-by-category__card-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+    pointer-events: none;
+  }
+
+  .ai-shop-by-category__card-label-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 16px;
+    z-index: 1;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-shop-by-category-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-shop-by-category__grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .ai-shop-by-category__left-column-{{ ai_gen_id }} {
+      order: 1;
+    }
+
+    .ai-shop-by-category__right-column-{{ ai_gen_id }} {
+      order: 2;
+    }
+
+    .ai-shop-by-category__card--tall-{{ ai_gen_id }} {
+      height: 250px;
+    }
+
+    .ai-shop-by-category__card--small-{{ ai_gen_id }} {
+      height: 150px;
+    }
+  }
+{% endstyle %}
+
+<shop-by-category-{{ ai_gen_id }} class="ai-shop-by-category-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank %}
+    <h2 class="ai-shop-by-category__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+  {% endif %}
+
+  <div class="ai-shop-by-category__grid-{{ ai_gen_id }}">
+    <div class="ai-shop-by-category__left-column-{{ ai_gen_id }}">
+      <a
+        href="{{ block.settings.card_1_url }}"
+        class="ai-shop-by-category__card-{{ ai_gen_id }} ai-shop-by-category__card--tall-{{ ai_gen_id }}"
+      >
+        {% if block.settings.card_1_image %}
+          <img
+            src="{{ block.settings.card_1_image | image_url: width: 800 }}"
+            alt="{{ block.settings.card_1_label | escape }}"
+            class="ai-shop-by-category__card-image-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ block.settings.card_1_image.width }}"
+            height="{{ block.settings.card_1_image.height }}"
+          >
+        {% else %}
+          <div class="ai-shop-by-category__card-placeholder-{{ ai_gen_id }}">
+            {{ 'collection-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+        <div class="ai-shop-by-category__card-overlay-{{ ai_gen_id }}"></div>
+        {% if block.settings.card_1_label != blank %}
+          <p class="ai-shop-by-category__card-label-{{ ai_gen_id }}">{{ block.settings.card_1_label }}</p>
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="ai-shop-by-category__right-column-{{ ai_gen_id }}">
+      {% for i in (2..5) %}
+        {% liquid
+          assign card_image_key = 'card_' | append: i | append: '_image'
+          assign card_label_key = 'card_' | append: i | append: '_label'
+          assign card_url_key = 'card_' | append: i | append: '_url'
+
+          assign card_image = block.settings[card_image_key]
+          assign card_label = block.settings[card_label_key]
+          assign card_url = block.settings[card_url_key]
+        %}
+
+        <a
+          href="{{ card_url }}"
+          class="ai-shop-by-category__card-{{ ai_gen_id }} ai-shop-by-category__card--small-{{ ai_gen_id }}"
+        >
+          {% if card_image %}
+            <img
+              src="{{ card_image | image_url: width: 600 }}"
+              alt="{{ card_label | escape }}"
+              class="ai-shop-by-category__card-image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="{{ card_image.width }}"
+              height="{{ card_image.height }}"
+            >
+          {% else %}
+            <div class="ai-shop-by-category__card-placeholder-{{ ai_gen_id }}">
+              {{ 'collection-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+          <div class="ai-shop-by-category__card-overlay-{{ ai_gen_id }}"></div>
+          {% if card_label != blank %}
+            <p class="ai-shop-by-category__card-label-{{ ai_gen_id }}">{{ card_label }}</p>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</shop-by-category-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ShopByCategory{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('shop-by-category-{{ ai_gen_id }}', ShopByCategory{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Compra por categoria",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Título da secção",
+      "default": "Compra por categoria"
+    },
+    {
+      "type": "header",
+      "content": "Cartão 1 (esquerda - grande)"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Imagem"
+    },
+    {
+      "type": "text",
+      "id": "card_1_label",
+      "label": "Etiqueta",
+      "default": "Categoria 1"
+    },
+    {
+      "type": "url",
+      "id": "card_1_url",
+      "label": "Link da coleção"
+    },
+    {
+      "type": "header",
+      "content": "Cartão 2 (direita - superior esquerdo)"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Imagem"
+    },
+    {
+      "type": "text",
+      "id": "card_2_label",
+      "label": "Etiqueta",
+      "default": "Categoria 2"
+    },
+    {
+      "type": "url",
+      "id": "card_2_url",
+      "label": "Link da coleção"
+    },
+    {
+      "type": "header",
+      "content": "Cartão 3 (direita - superior direito)"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_image",
+      "label": "Imagem"
+    },
+    {
+      "type": "text",
+      "id": "card_3_label",
+      "label": "Etiqueta",
+      "default": "Categoria 3"
+    },
+    {
+      "type": "url",
+      "id": "card_3_url",
+      "label": "Link da coleção"
+    },
+    {
+      "type": "header",
+      "content": "Cartão 4 (direita - inferior esquerdo)"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_4_image",
+      "label": "Imagem"
+    },
+    {
+      "type": "text",
+      "id": "card_4_label",
+      "label": "Etiqueta",
+      "default": "Categoria 4"
+    },
+    {
+      "type": "url",
+      "id": "card_4_url",
+      "label": "Link da coleção"
+    },
+    {
+      "type": "header",
+      "content": "Cartão 5 (direita - inferior direito)"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_5_image",
+      "label": "Imagem"
+    },
+    {
+      "type": "text",
+      "id": "card_5_label",
+      "label": "Etiqueta",
+      "default": "Categoria 5"
+    },
+    {
+      "type": "url",
+      "id": "card_5_url",
+      "label": "Link da coleção"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Compra por categoria"
+    }
+  ]
+}
+{% endschema %}

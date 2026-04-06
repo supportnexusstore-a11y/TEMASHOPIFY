@@ -1,0 +1,566 @@
+{% doc %}
+  @prompt
+    Create a editorial/article section with a two-column layout for a product page:
+    
+    LEFT COLUMN (about 50% width):
+    - Small label/tag text at top (e.g. "Blog" or category name)
+    - Large bold heading/title (e.g. "El arte del sueño perfecto: Noche tras noche")
+    - Body paragraph text below the title
+    - Small author info at bottom with avatar icon, author name and date
+    - Clean white or light background
+    
+    RIGHT COLUMN (about 50% width):
+    - Full height image that fills the column with rounded corners
+    - Image should be tall and cover the full height of the section
+    
+    OVERALL:
+    - Section has generous padding
+    - Clean minimal design
+    - Responsive: stacks vertically on mobile (image on top, text below)
+    - Subtle divider or spacing between columns
+    
+    All editable in theme editor:
+    - Label/tag text
+    - Heading text
+    - Body paragraph text
+    - Author name, date
+    - Author avatar image picker
+    - Main image picker
+    - Background color
+    - Text colors and sizes
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-editorial-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-editorial-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    width: {{ block.settings.desktop_width_percent }}%;
+  }
+
+  .ai-editorial-text-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: {{ block.settings.text_spacing }}px;
+  }
+
+  .ai-editorial-label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.label_color }};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  .ai-editorial-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .ai-editorial-body-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_size }}px;
+    color: {{ block.settings.body_color }};
+    line-height: 1.6;
+  }
+
+  .ai-editorial-author-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: {{ block.settings.author_margin_top }}px;
+  }
+
+  .ai-editorial-avatar-{{ ai_gen_id }} {
+    width: {{ block.settings.avatar_size }}px;
+    height: {{ block.settings.avatar_size }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .ai-editorial-avatar-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-editorial-avatar-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.label_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-editorial-avatar-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  .ai-editorial-author-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ai-editorial-author-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.author_name_size }}px;
+    color: {{ block.settings.author_name_color }};
+    font-weight: 600;
+  }
+
+  .ai-editorial-author-date-{{ ai_gen_id }} {
+    font-size: {{ block.settings.author_date_size }}px;
+    color: {{ block.settings.author_date_color }};
+  }
+
+  .ai-editorial-image-column-{{ ai_gen_id }} {
+    position: relative;
+    min-height: 400px;
+  }
+
+  .ai-editorial-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-editorial-image-wrapper-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-editorial-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-editorial-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-editorial-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-editorial-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+
+    .ai-editorial-image-column-{{ ai_gen_id }} {
+      order: -1;
+      min-height: 300px;
+    }
+
+    .ai-editorial-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-editorial-body-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.body_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+<editorial-section-{{ ai_gen_id }}
+  class="ai-editorial-section-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-editorial-container-{{ ai_gen_id }}">
+    <div class="ai-editorial-text-column-{{ ai_gen_id }}">
+      {% if block.settings.label != blank %}
+        <div class="ai-editorial-label-{{ ai_gen_id }}">
+          {{ block.settings.label }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-editorial-heading-{{ ai_gen_id }}">
+          {{ block.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if block.settings.body_text != blank %}
+        <div class="ai-editorial-body-{{ ai_gen_id }}">
+          {{ block.settings.body_text }}
+        </div>
+      {% endif %}
+
+      <div class="ai-editorial-author-{{ ai_gen_id }}">
+        <div class="ai-editorial-avatar-{{ ai_gen_id }}">
+          {% if block.settings.author_avatar %}
+            <img
+              src="{{ block.settings.author_avatar | image_url: width: 100 }}"
+              alt="{{ block.settings.author_name | escape }}"
+              width="100"
+              height="100"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-editorial-avatar-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="ai-editorial-author-info-{{ ai_gen_id }}">
+          {% if block.settings.author_name != blank %}
+            <div class="ai-editorial-author-name-{{ ai_gen_id }}">
+              {{ block.settings.author_name }}
+            </div>
+          {% endif %}
+          {% if block.settings.author_date != blank %}
+            <div class="ai-editorial-author-date-{{ ai_gen_id }}">
+              {{ block.settings.author_date }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-editorial-image-column-{{ ai_gen_id }}">
+      <div class="ai-editorial-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.main_image %}
+          <img
+            src="{{ block.settings.main_image | image_url: width: 1200 }}"
+            alt="{{ block.settings.main_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.main_image.width }}"
+            height="{{ block.settings.main_image.height }}"
+          >
+        {% else %}
+          <div class="ai-editorial-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-editorial-empty-state-{{ ai_gen_id }}">
+              Next, add an image
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</editorial-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class EditorialSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+      }
+    }
+
+    customElements.define('editorial-section-{{ ai_gen_id }}', EditorialSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Editorial article",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "label": "Padding horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "label": "Mobile gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Label"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label text",
+      "default": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "El arte del sueño perfecto: Noche tras noche"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Body text"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "Discover the secrets to achieving perfect sleep every night. From creating the ideal sleep environment to establishing healthy bedtime routines, we explore the art and science of restful nights."
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "text_spacing",
+      "label": "Text spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Author"
+    },
+    {
+      "type": "image_picker",
+      "id": "author_avatar",
+      "label": "Avatar image"
+    },
+    {
+      "type": "range",
+      "id": "avatar_size",
+      "label": "Avatar size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "text",
+      "id": "author_name",
+      "label": "Name",
+      "default": "Maria Silva"
+    },
+    {
+      "type": "range",
+      "id": "author_name_size",
+      "label": "Name size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "author_name_color",
+      "label": "Name color",
+      "default": "#121212"
+    },
+    {
+      "type": "text",
+      "id": "author_date",
+      "label": "Date",
+      "default": "April 6, 2026"
+    },
+    {
+      "type": "range",
+      "id": "author_date_size",
+      "label": "Date size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "author_date_color",
+      "label": "Date color",
+      "default": "#999999"
+    },
+    {
+      "type": "range",
+      "id": "author_margin_top",
+      "label": "Author margin top",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial article"
+    }
+  ]
+}
+{% endschema %}

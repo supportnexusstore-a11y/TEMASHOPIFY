@@ -1,0 +1,509 @@
+{% doc %}
+  @prompt
+    Video Reels block with autoplay for product pages.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-video-gallery-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-video-gallery-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-video-gallery-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+    text-align: {{ block.settings.heading_alignment }};
+  }
+
+  .ai-video-gallery-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-video-gallery-item-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ block.settings.video_aspect_ratio }};
+    overflow: hidden;
+    border-radius: {{ block.settings.video_border_radius }}px;
+    background-color: {{ block.settings.video_background }};
+    cursor: pointer;
+  }
+
+  .ai-video-gallery-video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-video-gallery-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, {{ block.settings.video_background }} 0%, rgba(18, 18, 18, 0.8) 100%);
+    position: relative;
+  }
+
+  .ai-video-gallery-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-video-gallery-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: {{ block.settings.heading_color }};
+    font-size: 14px;
+    opacity: 0.7;
+    text-align: center;
+    padding: 0 20px;
+    width: 100%;
+  }
+
+  .ai-video-gallery-play-icon-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background-color: {{ block.settings.play_button_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ai-video-gallery-play-icon-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+    color: {{ block.settings.play_button_icon_color }};
+    margin-left: 3px;
+  }
+
+  .ai-video-gallery-item-{{ ai_gen_id }}.paused .ai-video-gallery-play-icon-{{ ai_gen_id }} {
+    opacity: 0.9;
+  }
+
+  .ai-video-gallery-item-{{ ai_gen_id }}:hover .ai-video-gallery-play-icon-{{ ai_gen_id }} {
+    opacity: 0.9;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-video-gallery-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.grid_gap | times: 0.75 }}px;
+    }
+
+    .ai-video-gallery-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-video-gallery-play-icon-{{ ai_gen_id }} {
+      width: 50px;
+      height: 50px;
+    }
+
+    .ai-video-gallery-play-icon-{{ ai_gen_id }} svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+{% endstyle %}
+
+<video-gallery-{{ ai_gen_id }} class="ai-video-gallery-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-video-gallery-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-video-gallery-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="ai-video-gallery-grid-{{ ai_gen_id }}">
+      {% for i in (1..6) %}
+        {% liquid
+          assign video_enabled_key = 'video_' | append: i | append: '_enabled'
+          assign video_url_key = 'video_' | append: i | append: '_url'
+          assign video_enabled = block.settings[video_enabled_key]
+          assign video_url = block.settings[video_url_key]
+        %}
+
+        {% if video_enabled %}
+          <div class="ai-video-gallery-item-{{ ai_gen_id }} paused" data-video-index="{{ i }}">
+            {% if video_url != blank %}
+              <video
+                class="ai-video-gallery-video-{{ ai_gen_id }}"
+                muted
+                loop
+                playsinline
+                autoplay
+                preload="auto"
+              >
+                <source src="{{ video_url }}" type="video/mp4">
+              </video>
+              <div class="ai-video-gallery-play-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            {% else %}
+              <div class="ai-video-gallery-placeholder-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <div class="ai-video-gallery-empty-state-{{ ai_gen_id }}">
+                  Add video URL for slot {{ i }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</video-gallery-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class VideoGallery{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.videos = [];
+        this.observers = new Map();
+      }
+
+      connectedCallback() {
+        this.initializeVideos();
+        this.setupIntersectionObserver();
+        this.setupClickHandlers();
+      }
+
+      initializeVideos() {
+        const videoItems = this.querySelectorAll('.ai-video-gallery-item-{{ ai_gen_id }}');
+        videoItems.forEach((item) => {
+          const video = item.querySelector('video');
+          if (video) {
+            this.videos.push({ element: video, container: item });
+          }
+        });
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target;
+            const container = video.closest('.ai-video-gallery-item-{{ ai_gen_id }}');
+
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+              container.classList.remove('paused');
+            } else {
+              video.pause();
+              container.classList.add('paused');
+            }
+          });
+        }, options);
+
+        this.videos.forEach(({ element }) => {
+          observer.observe(element);
+          this.observers.set(element, observer);
+        });
+      }
+
+      setupClickHandlers() {
+        this.videos.forEach(({ element, container }) => {
+          container.addEventListener('click', () => {
+            if (element.paused) {
+              element.play().catch(() => {});
+              container.classList.remove('paused');
+            } else {
+              element.pause();
+              container.classList.add('paused');
+            }
+          });
+        });
+      }
+
+      disconnectedCallback() {
+        this.observers.forEach((observer) => {
+          observer.disconnect();
+        });
+        this.observers.clear();
+      }
+    }
+
+    customElements.define('video-gallery-{{ ai_gen_id }}', VideoGallery{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Video Reels",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product videos"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading spacing",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 600,
+      "max": 1400,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Grid layout"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between videos",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio",
+      "label": "Video aspect ratio",
+      "options": [
+        { "value": "9/16", "label": "9:16 (Portrait)" },
+        { "value": "3/4", "label": "3:4 (Instagram)" },
+        { "value": "1/1", "label": "1:1 (Square)" },
+        { "value": "4/3", "label": "4:3 (Standard)" },
+        { "value": "16/9", "label": "16:9 (Widescreen)" }
+      ],
+      "default": "9/16"
+    },
+    {
+      "type": "range",
+      "id": "video_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Video border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "video_background",
+      "label": "Video background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "play_button_color",
+      "label": "Play button",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "play_button_icon_color",
+      "label": "Play button icon",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Video 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_1_enabled",
+      "label": "Enable video 1",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "video_1_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_2_enabled",
+      "label": "Enable video 2",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "video_2_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_3_enabled",
+      "label": "Enable video 3",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "video_3_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_4_enabled",
+      "label": "Enable video 4",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "video_4_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_5_enabled",
+      "label": "Enable video 5",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "video_5_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Video 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_6_enabled",
+      "label": "Enable video 6",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "video_6_url",
+      "label": "Video URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Reels"
+    }
+  ]
+}
+{% endschema %}

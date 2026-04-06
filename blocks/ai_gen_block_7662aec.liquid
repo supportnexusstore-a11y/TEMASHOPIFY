@@ -1,0 +1,478 @@
+{% doc %}
+  @prompt
+    Create a statistics/benefits section with 3 columns of animated percentage numbers. IMPORTANT: The count-up animation MUST trigger using IntersectionObserver when the section scrolls into the viewport - NOT on page load. Use a plain function-based approach (NOT custom elements / HTMLElement classes) to avoid issues with Shopify's theme editor.
+    
+    LAYOUT:
+    - Centered heading text at the top (e.g. "Benefícios comprovados, resultados comprovados") in regular weight
+    - 3 equal columns side by side with large bold percentage numbers (e.g. "80%", "75%", "74%")
+    - Below each number: a short bold subtitle
+    - Below subtitle: small italic description/citation text
+    - Clean white background, no borders or shadows
+    
+    ANIMATION (critical - must work on scroll):
+    - Use IntersectionObserver with threshold: 0.2
+    - Trigger count-up animation only when element enters viewport
+    - Use requestAnimationFrame for smooth counting from 0 to target
+    - Use easeOutQuart easing
+    - Store suffix in data-suffix attribute on each number element
+    - Use a simple init function called on DOMContentLoaded AND immediately for already-visible elements
+    - Do NOT use customElements.define or HTMLElement classes
+    
+    All content editable in theme editor:
+    - Section heading, heading color, heading size
+    - For each of 3 stats: number value, suffix (default "%"), subtitle, description
+    - Number color, size, weight
+    - Subtitle color, size
+    - Description color, size, style
+    - Animation duration (ms)
+    - Background color
+    - Desktop width percentage
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-stats-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: 60px 20px;
+  }
+
+  .ai-stats-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.desktop_width_percent }}%;
+    margin: 0 auto;
+  }
+
+  .ai-stats-heading-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 50px;
+    font-weight: 400;
+  }
+
+  .ai-stats-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .ai-stats-item-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-stats-number-{{ ai_gen_id }} {
+    font-size: {{ block.settings.number_size }}px;
+    font-weight: {{ block.settings.number_weight }};
+    color: {{ block.settings.number_color }};
+    margin: 0 0 15px;
+    line-height: 1.2;
+  }
+
+  .ai-stats-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 0 10px;
+  }
+
+  .ai-stats-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    font-style: {{ block.settings.description_style }};
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-stats-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .ai-stats-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+      margin-bottom: 30px;
+    }
+
+    .ai-stats-number-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.number_size }}px * 0.8);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-stats-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-stats-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-stats-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="ai-stats-grid-{{ ai_gen_id }}" data-stats-container="{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign number_key = 'stat_' | append: i | append: '_number'
+          assign suffix_key = 'stat_' | append: i | append: '_suffix'
+          assign subtitle_key = 'stat_' | append: i | append: '_subtitle'
+          assign description_key = 'stat_' | append: i | append: '_description'
+
+          assign number = block.settings[number_key]
+          assign suffix = block.settings[suffix_key]
+          assign subtitle = block.settings[subtitle_key]
+          assign description = block.settings[description_key]
+        %}
+
+        <div class="ai-stats-item-{{ ai_gen_id }}">
+          <div
+            class="ai-stats-number-{{ ai_gen_id }}"
+            data-stat-number="{{ ai_gen_id }}"
+            data-target="{{ number }}"
+            data-suffix="{{ suffix }}"
+          >
+            0{{ suffix }}
+          </div>
+          {% if subtitle != blank %}
+            <div class="ai-stats-subtitle-{{ ai_gen_id }}">{{ subtitle }}</div>
+          {% endif %}
+          {% if description != blank %}
+            <div class="ai-stats-description-{{ ai_gen_id }}">{{ description }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initStatsCounter{{ ai_gen_id }}() {
+      const container = document.querySelector('[data-stats-container="{{ ai_gen_id }}"]');
+      if (!container) return;
+
+      const numbers = container.querySelectorAll('[data-stat-number="{{ ai_gen_id }}"]');
+      let hasAnimated = false;
+
+      function easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+      }
+
+      function animateNumber(element) {
+        const target = parseFloat(element.getAttribute('data-target'));
+        const suffix = element.getAttribute('data-suffix');
+        const duration = {{ block.settings.animation_duration }};
+        const startTime = performance.now();
+
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeOutQuart(progress);
+          const current = easedProgress * target;
+
+          element.textContent = Math.round(current) + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            element.textContent = target + suffix;
+          }
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      function handleIntersection(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && !hasAnimated) {
+            hasAnimated = true;
+            numbers.forEach(function(number) {
+              animateNumber(number);
+            });
+            observer.unobserve(container);
+          }
+        });
+      }
+
+      const observer = new IntersectionObserver(handleIntersection, {
+        threshold: 0.2
+      });
+
+      observer.observe(container);
+
+      const rect = container.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      if (isVisible) {
+        hasAnimated = true;
+        numbers.forEach(function(number) {
+          animateNumber(number);
+        });
+        observer.unobserve(container);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initStatsCounter{{ ai_gen_id }});
+    } else {
+      initStatsCounter{{ ai_gen_id }}();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Statistics benefits",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Benefícios comprovados, resultados comprovados"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Statistic 1"
+    },
+    {
+      "type": "range",
+      "id": "stat_1_number",
+      "label": "Number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "text",
+      "id": "stat_1_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_subtitle",
+      "label": "Subtitle",
+      "default": "Aumento na satisfação"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_description",
+      "label": "Description",
+      "default": "Baseado em 1.200 avaliações de clientes"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 2"
+    },
+    {
+      "type": "range",
+      "id": "stat_2_number",
+      "label": "Number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 75
+    },
+    {
+      "type": "text",
+      "id": "stat_2_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_subtitle",
+      "label": "Subtitle",
+      "default": "Melhoria na performance"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_description",
+      "label": "Description",
+      "default": "Testado em condições reais de uso"
+    },
+    {
+      "type": "header",
+      "content": "Statistic 3"
+    },
+    {
+      "type": "range",
+      "id": "stat_3_number",
+      "label": "Number",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 74
+    },
+    {
+      "type": "text",
+      "id": "stat_3_suffix",
+      "label": "Suffix",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_subtitle",
+      "label": "Subtitle",
+      "default": "Recomendação de utilizadores"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_description",
+      "label": "Description",
+      "default": "De acordo com estudo independente"
+    },
+    {
+      "type": "header",
+      "content": "Number style"
+    },
+    {
+      "type": "color",
+      "id": "number_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Size",
+      "min": 24,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "select",
+      "id": "number_weight",
+      "label": "Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "900",
+          "label": "Extra bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Subtitle style"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Description style"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "description_style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ],
+      "default": "italic"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Duration",
+      "min": 500,
+      "max": 3000,
+      "step": 100,
+      "unit": "ms",
+      "default": 2000
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statistics benefits"
+    }
+  ]
+}
+{% endschema %}
