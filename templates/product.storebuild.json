@@ -1,0 +1,412 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "text_EpQCJ7": {
+          "type": "text",
+          "settings": {
+            "text": "<strong>Um companheiro realista que aquece o coração</strong>",
+            "text_style": "subtitle"
+          }
+        },
+        "text_iLFe8f": {
+          "type": "text",
+          "settings": {
+            "text": "✓ Toque macio e realista em silicone sólido de alta qualidade",
+            "text_style": "body"
+          }
+        },
+        "text_7aPJfe": {
+          "type": "text",
+          "settings": {
+            "text": "✓ Estimula a criatividade e o desenvolvimento emocional das crianças",
+            "text_style": "body"
+          }
+        },
+        "text_EhQWy8": {
+          "type": "text",
+          "settings": {
+            "text": "✓ Detalhes delicados que encantam colecionadores e pequenos",
+            "text_style": "body"
+          }
+        },
+        "text_XbcYnx": {
+          "type": "text",
+          "settings": {
+            "text": "✓ Acesso a acessórios exclusivos e certificado de autenticidade",
+            "text_style": "body"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "icon_with_text_gbKmRk": {
+          "type": "icon-with-text",
+          "settings": {
+            "layout": "horizontal",
+            "icon_1": "heart",
+            "heading_1": "Heading",
+            "icon_2": "return",
+            "heading_2": "Heading",
+            "icon_3": "truck",
+            "heading_3": "Heading"
+          }
+        },
+        "reviews_zMURYe": {
+          "type": "reviews",
+          "settings": {
+            "display_stars": true,
+            "star_color": "#ffcc00",
+            "avatar_alignment": "top",
+            "author_1": "<em>Cliente Satisfeito</em>",
+            "text_1": "<p>“Minha filha não desgruda do Lucca: é tão real que parece um bebê de verdade!” – Camila S.</p>",
+            "author_2": "<em>Cliente Satisfeito</em>",
+            "text_2": "<p>“Qualidade impecável e entrega super rápida. Recomendo a Ninace a todos!” – Ricardo M.</p>",
+            "author_3": "<em>Cliente Satisfeito</em>",
+            "text_3": "<p>“O toque do silicone é incrível e os detalhes me conquistaram na hora.” – Juliana P.</p>"
+          }
+        },
+        "collapsible_tab_CrAAQa": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Informação de envio",
+            "icon": "map_pin",
+            "content": "",
+            "page": "politicas-de-envio-e-frete"
+          }
+        },
+        "collapsible_tab_pLcGzU": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Política de devolución",
+            "icon": "return",
+            "content": "",
+            "page": "politicas-de-envio-e-frete"
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "text_EpQCJ7",
+        "text_iLFe8f",
+        "text_7aPJfe",
+        "text_EhQWy8",
+        "text_XbcYnx",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "icon_with_text_gbKmRk",
+        "reviews_zMURYe",
+        "collapsible_tab_CrAAQa",
+        "collapsible_tab_pLcGzU",
+        "description"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "judgeme_section_review_widget_8078": {
+      "type": "apps",
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "testimonials_GaHwmN": {
+      "type": "testimonials",
+      "blocks": {
+        "column_CYFe7c": {
+          "type": "column",
+          "settings": {
+            "title": "Heading",
+            "text": "<p>Share positive thoughts and feedback from your customer..</p>",
+            "image": "shopify://shop_images/vista-frontal-de-uma-mulher-sorridente-segurando-um-smartphone_23-2148493087.jpg",
+            "author_avatar": "shopify://shop_images/vista-frontal-de-uma-mulher-sorridente-segurando-um-smartphone_23-2148493087.jpg",
+            "author": "<em>Author</em>",
+            "card_gradient_top": "",
+            "card_gradient_bottom": "",
+            "card_title_color": "",
+            "card_text_color": "",
+            "card_author_color": "",
+            "card_stars_color": ""
+          }
+        },
+        "column_bgUEEw": {
+          "type": "column",
+          "settings": {
+            "title": "Heading",
+            "text": "<p>Share positive thoughts and feedback from your customer..</p>",
+            "image": "shopify://shop_images/retrato-de-menina-asiatica-de-terno-com-smartphone-sorrindo-e-parecendo-feliz-em-pe-sobre-o-estudio-rosa-b_1258-95439.jpg",
+            "author_avatar": "shopify://shop_images/retrato-de-menina-asiatica-de-terno-com-smartphone-sorrindo-e-parecendo-feliz-em-pe-sobre-o-estudio-rosa-b_1258-95439.jpg",
+            "author": "<em>Author</em>",
+            "card_gradient_top": "#fb33a6",
+            "card_gradient_bottom": "#334fb4",
+            "card_title_color": "#ffffff",
+            "card_text_color": "#ffffff",
+            "card_author_color": "#ffffff",
+            "card_stars_color": "#ffffff"
+          }
+        },
+        "column_7KEJkG": {
+          "type": "column",
+          "settings": {
+            "title": "Heading",
+            "text": "<p>Share positive thoughts and feedback from your customer..</p>",
+            "image": "shopify://shop_images/alegre-mulher-de-meia-idade-esta-segurando-seu-telefone-e-sorrindo-para-a-camera_182527-8808.avif",
+            "author_avatar": "shopify://shop_images/alegre-mulher-de-meia-idade-esta-segurando-seu-telefone-e-sorrindo-para-a-camera_182527-8808.avif",
+            "author": "<em>Author</em>",
+            "card_gradient_top": "",
+            "card_gradient_bottom": "",
+            "card_title_color": "",
+            "card_text_color": "",
+            "card_author_color": "",
+            "card_stars_color": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_CYFe7c",
+        "column_bgUEEw",
+        "column_7KEJkG"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "title": "Testimonials",
+        "testimonials_per_row": 3,
+        "gap": 20,
+        "enable_carousel": true,
+        "enable_infinite_ticker": true,
+        "infinite_ticker_speed": 3,
+        "carousel_autoplay": true,
+        "carousel_speed": 7,
+        "show_stars": true,
+        "title_color": "#242833",
+        "author_color": "#242833",
+        "text_color": "#242833",
+        "stars_color": "#242833",
+        "background_color": "#f8f8f9",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "before_after_product_hrzhzm": {
+      "type": "before-after-product",
+      "name": "Before / After",
+      "settings": {
+        "title": "Our Exciting Results",
+        "title_color": "linear-gradient(180deg, rgba(196, 60, 173, NaN), rgba(132, 70, 182, NaN) 100%)",
+        "title_bold": false,
+        "subtitle": "Sign up to receive your welcome offer, plus access to product launches and exclusive offers",
+        "subtitle_color": "#555555",
+        "subtitle_bold": false,
+        "button_text": "Shop Now",
+        "button_link": "",
+        "content_alignment": "center",
+        "left_bg_color": "#F8F8F8",
+        "image_before": "shopify://shop_images/Design_sem_nome_2.png",
+        "image_after": "shopify://shop_images/Design_sem_nome_4.png"
+      }
+    },
+    "collapsible_content_T7pUDq": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_RLkPTD": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Collapsible row",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_zJMFpT": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Collapsible row",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_UWbYAn": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Collapsible row",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_n9yWhm": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Collapsible row",
+            "icon": "check_mark",
+            "row_content": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_RLkPTD",
+        "collapsible_row_zJMFpT",
+        "collapsible_row_UWbYAn",
+        "collapsible_row_n9yWhm"
+      ],
+      "name": "t:sections.collapsible_content.presets.name",
+      "settings": {
+        "caption": "",
+        "heading": "Collapsible content",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "container_color_scheme": "",
+        "color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "comparison_table_UkAV8F": {
+      "type": "comparison-table",
+      "blocks": {
+        "row_pkdnjj": {
+          "type": "row",
+          "settings": {
+            "benefit": "Benefit",
+            "us": true,
+            "others": false
+          }
+        },
+        "row_9C3NhB": {
+          "type": "row",
+          "settings": {
+            "benefit": "Benefit",
+            "us": true,
+            "others": false
+          }
+        },
+        "row_xAd74Q": {
+          "type": "row",
+          "settings": {
+            "benefit": "Benefit",
+            "us": true,
+            "others": false
+          }
+        },
+        "row_WrFJ33": {
+          "type": "row",
+          "settings": {
+            "benefit": "Benefit",
+            "us": true,
+            "others": false
+          }
+        },
+        "row_RNmrf9": {
+          "type": "row",
+          "settings": {
+            "benefit": "Benefit",
+            "us": true,
+            "others": false
+          }
+        }
+      },
+      "block_order": [
+        "row_pkdnjj",
+        "row_9C3NhB",
+        "row_xAd74Q",
+        "row_WrFJ33",
+        "row_RNmrf9"
+      ],
+      "name": "Comparison table",
+      "settings": {
+        "wave_color_1": "#fb33a6",
+        "wave_color_2": "#fd71c1",
+        "comparison_bg_color": "#fb33a6",
+        "comparison_bg_color_end": "#334fb4",
+        "comparison_bg_start": 39,
+        "title": "Comparison table",
+        "heading_size": "h1",
+        "text": "<p>Talk about how and why is your brand better than the others.</p>",
+        "heading_color": "#ffffff",
+        "text_color": "#ffffff",
+        "content_gap": 28,
+        "button_label": "Shop Now",
+        "button_link": "",
+        "button_color": "#000000",
+        "button_text_color": "#ffffff",
+        "button_padding_vertical": 14,
+        "button_padding_horizontal": 22,
+        "button_style_secondary": false,
+        "title_cell_bg": "#260f0f",
+        "title_cell_color": "#ffffff",
+        "layout": "table_second",
+        "style": "classic",
+        "us_label": "BOLT",
+        "us_label_size": 23,
+        "us_label_color": "#e3e3e3",
+        "us_column_bg_color": "#ffffff",
+        "us_column_bg_opacity": 30,
+        "others_label": "Others",
+        "others_label_size": 23,
+        "others_label_color": "#2e2d2d",
+        "checkmark_color": "#ffffff",
+        "x_color": "#ffffff",
+        "opposite_icon_colors": "original",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "judgeme_section_review_widget_8078",
+    "testimonials_GaHwmN",
+    "comparison_table_UkAV8F",
+    "before_after_product_hrzhzm",
+    "collapsible_content_T7pUDq"
+  ]
+}
