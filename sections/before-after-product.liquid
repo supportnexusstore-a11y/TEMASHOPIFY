@@ -1,0 +1,454 @@
+<section class="ba-product-section">
+  <div class="ba-container">
+
+    <div class="ba-left ba-align-{{ section.settings.content_alignment }}"
+         style="{% if section.settings.left_bg_color != blank %}background-color: {{ section.settings.left_bg_color }};{% endif %}">
+      <h2 class="ba-title{% if section.settings.title_bold %} ba-bold{% endif %}"
+          style="{% if section.settings.title_color != blank %}background: {{ section.settings.title_color }}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;{% endif %}">
+        {{ section.settings.title }}
+      </h2>
+      <p class="ba-subtitle{% if section.settings.subtitle_bold %} ba-bold{% endif %}"
+         style="{% if section.settings.subtitle_color != blank %}color: {{ section.settings.subtitle_color }};{% endif %}">
+        {{ section.settings.subtitle }}
+      </p>
+
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="ba-button">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ba-right">
+      <div class="ba-image-wrapper">
+
+        {% if section.settings.image_after != blank %}
+          {{ section.settings.image_after
+            | image_url: width: 1200
+            | image_tag:
+              class: 'ba-img ba-img-after',
+              loading: 'lazy',
+              widths: '400, 600, 800, 1000, 1200'
+          }}
+          <div class="ba-label ba-label-after">After</div>
+        {% endif %}
+
+        <div class="ba-img-before-wrapper">
+          {% if section.settings.image_before != blank %}
+            {{ section.settings.image_before
+              | image_url: width: 1200
+              | image_tag:
+                class: 'ba-img ba-img-before',
+                loading: 'lazy',
+                widths: '400, 600, 800, 1000, 1200'
+            }}
+          {% endif %}
+          <div class="ba-label ba-label-before">Before</div>
+        </div>
+
+        <div class="ba-slider-line"></div>
+        <div class="ba-slider-handle"></div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.ba-container {
+  display: flex;
+  align-items: stretch;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.ba-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #F8F8F8;
+  padding: 40px;
+  border-radius: 8px;
+}
+
+/* Alinhamento Center (padrão) */
+.ba-left.ba-align-center {
+  align-items: center;
+  text-align: center;
+}
+
+/* Alinhamento Left */
+.ba-left.ba-align-left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* Alinhamento Right */
+.ba-left.ba-align-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.ba-title {
+  font-size: 40px;
+  margin-bottom: 15px;
+  background: linear-gradient(180deg, rgb(196, 60, 173) 0%, rgb(132, 70, 182) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ba-subtitle {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.ba-bold {
+  font-weight: bold;
+}
+
+.ba-button {
+  display: inline-block;
+  padding: 14px 120px;
+  background: #000;
+  color: #fff;
+  border-radius:7px;
+  text-decoration: none;
+}
+
+.ba-right {
+  flex: 1;
+  min-width: 0;
+}
+
+.ba-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  min-height: 280px;
+}
+
+.ba-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+.ba-image-wrapper .ba-img-after {
+  min-height: 280px;
+  object-fit: cover;
+}
+
+.ba-img-after {
+  position: relative;
+  z-index: 5;
+}
+
+.ba-img-before-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 15;
+}
+
+.ba-img-before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  min-height: 100%;
+}
+
+.ba-slider-line {
+  position: absolute !important;
+  top: 0 !important;
+  left: 50%;
+  width: 4px !important;
+  height: 100% !important;
+  background: #fff !important;
+  transform: translateX(-2px) !important;
+  pointer-events: none !important;
+  z-index: 9999 !important;
+  display: block !important;
+}
+
+.ba-slider-handle {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50%;
+  width: 40px !important;
+  height: 40px !important;
+  background: #fff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  border-radius: 35% !important;
+  transform: translate(-50%, -50%) rotate(90deg) !important;
+  pointer-events: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10000 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+@media (max-width: 768px) {
+  .ba-slider-handle {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  .ba-slider-handle::before {
+    width: 16px !important;
+    height: 3px !important;
+    box-shadow: 0 -6px 0 #000, 0 6px 0 #000 !important;
+  }
+}
+
+.ba-image-wrapper:hover .ba-slider-handle {
+  transform: translate(-50%, -50%) rotate(90deg) scale(1.1);
+}
+
+.ba-slider-handle::before {
+  content: '' !important;
+  position: absolute !important;
+  width: 14px !important;
+  height: 2.4px !important;
+  background: #000 !important;
+  border-radius: 2px !important;
+  box-shadow: 0 -5px 0 #000, 0 5px 0 #000 !important;
+  display: block !important;
+}
+
+.ba-label {
+  position: absolute;
+  top: 20px;
+  padding: 4px 10px;
+  background: rgb(0, 0, 0);
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 22;
+}
+
+.ba-label-before { left: 20px; }
+.ba-label-after { right: 20px; }
+
+@media (max-width: 768px) {
+  .ba-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    padding: 24px 16px;
+    gap: 24px;
+    min-height: 640px;
+  }
+  .ba-left {
+    padding: 24px 20px;
+    order: 1;
+    min-height: 0;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ba-right {
+    order: 2;
+    width: 100%;
+    min-height: 0;
+    align-self: stretch;
+  }
+  .ba-image-wrapper {
+    min-height: 320px;
+    width: 100%;
+  }
+  .ba-image-wrapper .ba-img-after {
+    min-height: 320px;
+    width: 100%;
+    object-fit: cover;
+  }
+  .ba-img-before-wrapper {
+    height: 100%;
+  }
+  .ba-img-before {
+    min-height: 100%;
+    object-fit: cover;
+  }
+  .ba-title { font-size: 26px; margin-bottom: 12px; }
+  .ba-subtitle { font-size: 16px; margin-bottom: 20px; }
+  .ba-button { padding: 12px 32px; }
+  .ba-label { font-size: 9px; padding: 6px 10px; top: 12px; }
+  .ba-label-before { left: 12px; }
+  .ba-label-after { right: 12px; }
+  .ba-slider-line { width: 3px !important; transform: translateX(-1.5px) !important; }
+}
+</style>
+
+{% raw %}
+<script>
+(function() {
+  'use strict';
+
+  function initBeforeAfter(wrapper) {
+    if (!wrapper) return;
+
+    const beforeWrapper = wrapper.querySelector(".ba-img-before-wrapper");
+    const line = wrapper.querySelector(".ba-slider-line");
+    const handle = wrapper.querySelector(".ba-slider-handle");
+
+    if (!beforeWrapper || !line || !handle) return;
+
+    let isDragging = false;
+
+    const moveSlider = (x) => {
+      const rect = wrapper.getBoundingClientRect();
+      let offset = x - rect.left;
+      offset = Math.max(0, Math.min(offset, rect.width));
+      const percent = (offset / rect.width) * 100;
+
+      beforeWrapper.style.width = percent + "%";
+      line.style.left = percent + "%";
+      handle.style.left = percent + "%";
+    };
+
+    const handleMouseDown = (e) => {
+      e.preventDefault();
+      isDragging = true;
+      moveSlider(e.clientX);
+    };
+
+    const handleMouseUp = () => {
+      isDragging = false;
+    };
+
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        moveSlider(e.clientX);
+      }
+    };
+
+    const handleTouchStart = (e) => {
+      e.preventDefault();
+      isDragging = true;
+      moveSlider(e.touches[0].clientX);
+    };
+
+    const handleTouchMove = (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        moveSlider(e.touches[0].clientX);
+      }
+    };
+
+    wrapper.addEventListener("mousedown", handleMouseDown);
+    wrapper.addEventListener("mouseup", handleMouseUp);
+    wrapper.addEventListener("mouseleave", handleMouseUp);
+    wrapper.addEventListener("mousemove", handleMouseMove);
+    wrapper.addEventListener("touchstart", handleTouchStart, { passive: false });
+    wrapper.addEventListener("touchend", handleMouseUp);
+    wrapper.addEventListener("touchcancel", handleMouseUp);
+    wrapper.addEventListener("touchmove", handleTouchMove, { passive: false });
+  }
+
+  function initAll() {
+    document.querySelectorAll('.ba-image-wrapper').forEach(initBeforeAfter);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+})();
+</script>
+{% endraw %}
+
+{% schema %}
+{
+  "name": "Before / After",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    { "type": "text", "id": "title", "label": "Title", "default": "Our Exciting Results" },
+    {
+      "type": "color_background",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "linear-gradient(180deg, rgb(196, 60, 173) 0%, rgb(132, 70, 182) 100%)",
+      "info": "Use solid color or gradient. Default: pink to purple gradient"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_bold",
+      "label": "Title bold",
+      "default": false
+    },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Sign up to receive your welcome offer, plus access to product launches and exclusive offers" },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#555555"
+    },
+    {
+      "type": "checkbox",
+      "id": "subtitle_bold",
+      "label": "Subtitle bold",
+      "default": false
+    },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Shop Now" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center",
+      "info": "Alignment of title, subtitle and button in the left area"
+    },
+    {
+      "type": "color",
+      "id": "left_bg_color",
+      "label": "Left area background color",
+      "default": "#F8F8F8",
+      "info": "Background color of the content area"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    { "type": "image_picker", "id": "image_before", "label": "Before image" },
+    { "type": "image_picker", "id": "image_after", "label": "After image" }
+  ],
+  "presets": [
+    { "name": "Before / After" }
+  ]
+}
+{% endschema %}

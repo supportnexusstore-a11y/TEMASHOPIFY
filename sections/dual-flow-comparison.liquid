@@ -1,0 +1,698 @@
+{% comment %}
+  Dual Flow Comparison Section
+  Compare two processes or paths side by side with step-by-step flow
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --dfc-bg: {{ section.settings.bg_color }};
+    --dfc-text: {{ section.settings.text_color }};
+    --dfc-heading: {{ section.settings.heading_color }};
+    --dfc-accent: {{ section.settings.accent_color }};
+    --dfc-header-bg: {{ section.settings.header_bg_color }};
+    --dfc-border: {{ section.settings.border_color }};
+    --dfc-last-bg: {{ section.settings.last_item_bg }};
+    --dfc-last-text: {{ section.settings.last_item_text }};
+  }
+
+  #shopify-section-{{ section.id }} .dfc-section {
+    background: var(--dfc-bg);
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-title {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--dfc-heading);
+    margin-bottom: 30px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-top-image {
+    margin: 0 auto 40px;
+    max-width: 300px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-top-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-columns {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-column {
+    flex: 1;
+    max-width: 420px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-column-header {
+    background: var(--dfc-header-bg);
+    padding: 20px;
+    border-radius: {{ section.settings.border_radius }}px {{ section.settings.border_radius }}px 0 0;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-column-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-column-subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: left;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-arrow-down {
+    display: block;
+    margin: 0 auto;
+    max-width: 40px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-list-item {
+    display: flex;
+    align-items: center;
+    padding: 20px 30px;
+    border: 2px solid var(--dfc-border);
+    border-top: none;
+    gap: 15px;
+    background: var(--dfc-bg);
+    transition: all 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-list-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  #shopify-section-{{ section.id }} .dfc-list-item.dfc-last-item {
+    background: var(--dfc-last-bg);
+    border-color: var(--dfc-last-bg);
+  }
+
+  #shopify-section-{{ section.id }} .dfc-list-item.dfc-last-item .dfc-item-text {
+    color: var(--dfc-last-text);
+  }
+
+  #shopify-section-{{ section.id }} .dfc-list-item.dfc-last-item .dfc-item-icon {
+    filter: invert(1) brightness(200%);
+  }
+
+  #shopify-section-{{ section.id }} .dfc-item-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-item-text {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    color: var(--dfc-text);
+  }
+
+  #shopify-section-{{ section.id }} .dfc-step-arrow {
+    display: block;
+    margin: 0 auto;
+    max-width: 40px;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-placeholder-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--dfc-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .dfc-placeholder-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+  }
+
+  /* Tablet Styles */
+  @media (min-width: 769px) and (max-width: 1040px) {
+    #shopify-section-{{ section.id }} .dfc-section {
+      padding: {{ section.settings.padding_top | divided_by: 1.5 | round }}px 20px {{ section.settings.padding_bottom | divided_by: 1.5 | round }}px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-columns {
+      gap: 25px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-title {
+      font-size: calc({{ section.settings.heading_size }}px * 0.8);
+      margin-bottom: 25px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column {
+      max-width: 380px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-title {
+      font-size: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-subtitle {
+      font-size: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-list-item {
+      padding: 18px 15px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-item-text {
+      font-size: 14px;
+    }
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .dfc-section {
+      padding: 40px 16px 50px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-container {
+      padding: 0;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-title {
+      font-size: 24px;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-top-image {
+      max-width: 180px;
+      margin-bottom: 25px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-columns {
+      flex-direction: column;
+      gap: 25px;
+      align-items: stretch;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-header {
+      padding: 16px 18px;
+      border-radius: {{ section.settings.border_radius }}px {{ section.settings.border_radius }}px 0 0;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-title {
+      font-size: 16px;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-subtitle {
+      font-size: 13px;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-arrow-down {
+      max-width: 30px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-list-item {
+      padding: 16px 14px;
+      gap: 12px;
+      min-height: 56px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-item-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-placeholder-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-placeholder-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-item-text {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-step-arrow {
+      max-width: 28px;
+      margin: 4px auto;
+    }
+
+    /* Better touch targets */
+    #shopify-section-{{ section.id }} .dfc-list-item:active {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    #shopify-section-{{ section.id }} .dfc-list-item.dfc-last-item:active {
+      opacity: 0.9;
+    }
+  }
+
+  /* Small Mobile Styles */
+  @media (max-width: 380px) {
+    #shopify-section-{{ section.id }} .dfc-section {
+      padding: 30px 12px 40px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-title {
+      font-size: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-header {
+      padding: 14px 16px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-title {
+      font-size: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-column-subtitle {
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-list-item {
+      padding: 14px 12px;
+    }
+
+    #shopify-section-{{ section.id }} .dfc-item-text {
+      font-size: 13px;
+    }
+  }
+</style>
+
+<div class="dfc-section">
+  <div class="dfc-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="dfc-title">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.image != blank %}
+      <div class="dfc-top-image">
+        <img
+          src="{{ section.settings.image | image_url: width: 600 }}"
+          alt="{{ section.settings.heading | default: 'Comparison illustration' }}"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+    <div class="dfc-columns">
+      <!-- Left Column -->
+      <div class="dfc-column">
+        <div class="dfc-column-header">
+          <p class="dfc-column-title">{{ section.settings.left_heading | default: 'Option A' }}</p>
+          {% if section.settings.left_subheading != blank %}
+            <p class="dfc-column-subtitle">{{ section.settings.left_subheading }}</p>
+          {% endif %}
+        </div>
+
+        {% if section.settings.left_down_arrow != blank %}
+          <img
+            src="{{ section.settings.left_down_arrow | image_url: width: 80 }}"
+            alt="Arrow down"
+            class="dfc-arrow-down"
+            loading="lazy"
+          >
+        {% endif %}
+
+        <ul class="dfc-list">
+          {% assign left_blocks = section.blocks | where: 'type', 'left' %}
+          {% for block in left_blocks %}
+            <li class="dfc-list-item{% if forloop.last %} dfc-last-item{% endif %}" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                <img
+                  src="{{ block.settings.image | image_url: width: 64 }}"
+                  alt="{{ block.settings.list_heading }}"
+                  class="dfc-item-icon"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="dfc-placeholder-icon">
+                  <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+              {% endif %}
+              <p class="dfc-item-text">{{ block.settings.list_heading }}</p>
+            </li>
+            {% unless forloop.last %}
+              {% if block.settings.block_left_arrow != blank %}
+                <img
+                  src="{{ block.settings.block_left_arrow | image_url: width: 80 }}"
+                  alt="Arrow"
+                  class="dfc-step-arrow"
+                  loading="lazy"
+                >
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Right Column -->
+      <div class="dfc-column">
+        <div class="dfc-column-header">
+          <p class="dfc-column-title">{{ section.settings.right_heading | default: 'Option B' }}</p>
+          {% if section.settings.right_subheading != blank %}
+            <p class="dfc-column-subtitle">{{ section.settings.right_subheading }}</p>
+          {% endif %}
+        </div>
+
+        {% if section.settings.right_down_arrow != blank %}
+          <img
+            src="{{ section.settings.right_down_arrow | image_url: width: 80 }}"
+            alt="Arrow down"
+            class="dfc-arrow-down"
+            loading="lazy"
+          >
+        {% endif %}
+
+        <ul class="dfc-list">
+          {% assign right_blocks = section.blocks | where: 'type', 'right' %}
+          {% for block in right_blocks %}
+            <li class="dfc-list-item{% if forloop.last %} dfc-last-item{% endif %}" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                <img
+                  src="{{ block.settings.image | image_url: width: 64 }}"
+                  alt="{{ block.settings.list_heading }}"
+                  class="dfc-item-icon"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="dfc-placeholder-icon">
+                  <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+              {% endif %}
+              <p class="dfc-item-text">{{ block.settings.list_heading }}</p>
+            </li>
+            {% unless forloop.last %}
+              {% if block.settings.block_right_arrow != blank %}
+                <img
+                  src="{{ block.settings.block_right_arrow | image_url: width: 80 }}"
+                  alt="Arrow"
+                  class="dfc-step-arrow"
+                  loading="lazy"
+                >
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Dual Flow Comparison",
+  "tag": "section",
+  "class": "dual-flow-comparison-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Compare the Two Paths"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Top Image"
+    },
+    {
+      "type": "header",
+      "content": "Left Column"
+    },
+    {
+      "type": "text",
+      "id": "left_heading",
+      "label": "Left Heading",
+      "default": "Traditional Method"
+    },
+    {
+      "type": "text",
+      "id": "left_subheading",
+      "label": "Left Subheading",
+      "default": "The conventional approach"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_down_arrow",
+      "label": "Left Arrow Image"
+    },
+    {
+      "type": "header",
+      "content": "Right Column"
+    },
+    {
+      "type": "text",
+      "id": "right_heading",
+      "label": "Right Heading",
+      "default": "Our Method"
+    },
+    {
+      "type": "text",
+      "id": "right_subheading",
+      "label": "Right Subheading",
+      "default": "The better way"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_down_arrow",
+      "label": "Right Arrow Image"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border Radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "default": 4,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1400,
+      "step": 20,
+      "default": 1000,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "default": 160,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "default": 160,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#BF8C4C"
+    },
+    {
+      "type": "color",
+      "id": "header_bg_color",
+      "label": "Column Header Background",
+      "default": "#BF8C4C"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#00000040"
+    },
+    {
+      "type": "color",
+      "id": "last_item_bg",
+      "label": "Last Item Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "last_item_text",
+      "label": "Last Item Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "left",
+      "name": "Left Column Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "list_heading",
+          "label": "Item Text",
+          "default": "Step description"
+        },
+        {
+          "type": "image_picker",
+          "id": "block_left_arrow",
+          "label": "Arrow Image (between steps)"
+        }
+      ]
+    },
+    {
+      "type": "right",
+      "name": "Right Column Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "list_heading",
+          "label": "Item Text",
+          "default": "Step description"
+        },
+        {
+          "type": "image_picker",
+          "id": "block_right_arrow",
+          "label": "Arrow Image (between steps)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dual Flow Comparison",
+      "category": "Comparison",
+      "blocks": [
+        {
+          "type": "left",
+          "settings": {
+            "list_heading": "Start with research"
+          }
+        },
+        {
+          "type": "left",
+          "settings": {
+            "list_heading": "Analyze the data"
+          }
+        },
+        {
+          "type": "left",
+          "settings": {
+            "list_heading": "Achieve results"
+          }
+        },
+        {
+          "type": "right",
+          "settings": {
+            "list_heading": "Quick start guide"
+          }
+        },
+        {
+          "type": "right",
+          "settings": {
+            "list_heading": "Automated process"
+          }
+        },
+        {
+          "type": "right",
+          "settings": {
+            "list_heading": "Better outcomes"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

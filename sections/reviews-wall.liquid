@@ -1,0 +1,741 @@
+{% comment %}
+  Reviews Wall Section
+  Pinterest-style masonry layout with social media look
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --rw-bg: {{ section.settings.bg_color }};
+    --rw-card-bg: {{ section.settings.card_bg }};
+    --rw-text: {{ section.settings.text_color }};
+    --rw-heading: {{ section.settings.heading_color }};
+    --rw-accent: {{ section.settings.accent_color }};
+    --rw-star: {{ section.settings.star_color }};
+  }
+
+  #shopify-section-{{ section.id }} * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .rw-section {
+    background: var(--rw-bg);
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .rw-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  #shopify-section-{{ section.id }} .rw-stat {
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .rw-stat-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--rw-accent);
+    line-height: 1;
+  }
+
+  #shopify-section-{{ section.id }} .rw-stat-label {
+    font-size: 14px;
+    color: var(--rw-text);
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-title {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    color: var(--rw-heading);
+    margin-bottom: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-overall-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-overall-stars {
+    display: flex;
+    gap: 4px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-overall-stars svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--rw-star);
+  }
+
+  #shopify-section-{{ section.id }} .rw-overall-text {
+    font-size: 16px;
+    color: var(--rw-text);
+  }
+
+  /* Masonry Grid */
+  #shopify-section-{{ section.id }} .rw-masonry {
+    columns: {{ section.settings.columns }};
+    column-gap: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--rw-card-bg);
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    transform: scale(1.02);
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-image {
+    width: 100%;
+    aspect-ratio: auto;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-content {
+    padding: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-avatar .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--rw-accent), #667eea);
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-author {
+    flex-grow: 1;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--rw-heading);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-verified-icon {
+    width: 16px;
+    height: 16px;
+    fill: #1da1f2;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-handle {
+    font-size: 13px;
+    color: var(--rw-text);
+    opacity: 0.6;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-platform {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 12px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-stars svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-stars .filled { fill: var(--rw-star); }
+  #shopify-section-{{ section.id }} .rw-card-stars .empty { fill: #ddd; }
+
+  #shopify-section-{{ section.id }} .rw-card-text {
+    font-size: {{ section.settings.text_size }}px;
+    line-height: 1.6;
+    color: var(--rw-text);
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-text .highlight {
+    background: linear-gradient(120deg, rgba(var(--rw-accent), 0.2) 0%, rgba(var(--rw-accent), 0.2) 100%);
+    background-color: rgba(139, 92, 246, 0.15);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-date {
+    font-size: 12px;
+    color: var(--rw-text);
+    opacity: 0.5;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-helpful {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--rw-text);
+    opacity: 0.6;
+  }
+
+  #shopify-section-{{ section.id }} .rw-card-helpful svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .rw-masonry {
+      columns: 2;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .rw-section {
+      padding: {{ section.settings.padding_top_mobile }}px 15px {{ section.settings.padding_bottom_mobile }}px;
+    }
+    #shopify-section-{{ section.id }} .rw-masonry {
+      columns: 1;
+    }
+    #shopify-section-{{ section.id }} .rw-title {
+      font-size: {{ section.settings.heading_size_mobile }}px;
+    }
+    #shopify-section-{{ section.id }} .rw-stat-number {
+      font-size: 36px;
+    }
+    #shopify-section-{{ section.id }} .rw-stats {
+      gap: 25px;
+    }
+  }
+</style>
+
+<div class="rw-section">
+  <div class="rw-container">
+    <div class="rw-header">
+      {% if section.settings.show_stats %}
+      <div class="rw-stats">
+        <div class="rw-stat">
+          <div class="rw-stat-number">{{ section.settings.stat_reviews }}</div>
+          <div class="rw-stat-label">Reviews</div>
+        </div>
+        <div class="rw-stat">
+          <div class="rw-stat-number">{{ section.settings.stat_rating }}</div>
+          <div class="rw-stat-label">Average Rating</div>
+        </div>
+        <div class="rw-stat">
+          <div class="rw-stat-number">{{ section.settings.stat_recommend }}%</div>
+          <div class="rw-stat-label">Recommend</div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+        <h2 class="rw-title">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      {% if section.settings.show_overall_rating %}
+      <div class="rw-overall-rating">
+        <div class="rw-overall-stars">
+          {% for i in (1..5) %}
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          {% endfor %}
+        </div>
+        <span class="rw-overall-text">Based on {{ section.settings.stat_reviews }} reviews</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="rw-masonry">
+      {% for block in section.blocks %}
+        <div class="rw-card" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+          <div class="rw-card-image">
+            <img src="{{ block.settings.image | image_url: width: 600 }}" alt="Review photo" loading="lazy">
+          </div>
+          {% endif %}
+
+          <div class="rw-card-content">
+            <div class="rw-card-header">
+              <div class="rw-card-avatar">
+                {% if block.settings.avatar != blank %}
+                  <img src="{{ block.settings.avatar | image_url: width: 100 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+              <div class="rw-card-author">
+                <div class="rw-card-name">
+                  {{ block.settings.name }}
+                  {% if block.settings.verified %}
+                  <svg class="rw-verified-icon" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                  </svg>
+                  {% endif %}
+                </div>
+                {% if block.settings.handle != blank %}
+                <div class="rw-card-handle">{{ block.settings.handle }}</div>
+                {% endif %}
+              </div>
+              {% if block.settings.platform == 'instagram' %}
+              <svg class="rw-card-platform" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
+              </svg>
+              {% elsif block.settings.platform == 'twitter' %}
+              <svg class="rw-card-platform" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+              </svg>
+              {% endif %}
+            </div>
+
+            <div class="rw-card-stars">
+              {% for i in (1..5) %}
+                {% if i <= block.settings.rating %}
+                  <svg class="filled" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                {% else %}
+                  <svg class="empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <p class="rw-card-text">{{ block.settings.text }}</p>
+
+            <div class="rw-card-footer">
+              <span class="rw-card-date">{{ block.settings.date }}</span>
+              {% if block.settings.helpful > 0 %}
+              <span class="rw-card-helpful">
+                <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                {{ block.settings.helpful }} found helpful
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Reviews Wall",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Statistics"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show Statistics",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "stat_reviews",
+      "label": "Total Reviews",
+      "default": "2,547"
+    },
+    {
+      "type": "text",
+      "id": "stat_rating",
+      "label": "Average Rating",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "stat_recommend",
+      "label": "Recommend %",
+      "default": "98"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The Wall of Love"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overall_rating",
+      "label": "Show Overall Rating",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "default": 1300,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading Size Mobile",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "default": 26,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Review Text Size",
+      "min": 13,
+      "max": 18,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top Mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom Mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#374151"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#6366f1"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#fbbf24"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Card Border Radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Review Photo (optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Author Avatar"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Jane Doe"
+        },
+        {
+          "type": "text",
+          "id": "handle",
+          "label": "Handle/Username",
+          "default": "@janedoe"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified Badge",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "platform",
+          "label": "Platform Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "instagram", "label": "Instagram" },
+            { "value": "twitter", "label": "Twitter" }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review Text",
+          "default": "This product changed my life! Can't recommend it enough."
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "2 days ago"
+        },
+        {
+          "type": "range",
+          "id": "helpful",
+          "label": "Helpful Count",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 12
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews Wall",
+      "category": "Social Proof",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "name": "Sophie Anderson",
+            "handle": "@sophieand",
+            "verified": true,
+            "platform": "instagram",
+            "rating": 5,
+            "text": "I'm absolutely obsessed with this! Been using it for 3 months now and the results are incredible. My skin has never looked better!",
+            "date": "3 hours ago",
+            "helpful": 24
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Mike Reynolds",
+            "handle": "@mikereynolds",
+            "verified": true,
+            "platform": "twitter",
+            "rating": 5,
+            "text": "Finally found a product that actually works. The quality is outstanding and shipping was super fast. 10/10 would recommend!",
+            "date": "1 day ago",
+            "helpful": 18
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Emma Thompson",
+            "handle": "@emmathompson",
+            "verified": true,
+            "platform": "none",
+            "rating": 5,
+            "text": "Best purchase I've made this year! The attention to detail is amazing.",
+            "date": "2 days ago",
+            "helpful": 31
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Alex Chen",
+            "handle": "@alexc",
+            "verified": true,
+            "platform": "instagram",
+            "rating": 4,
+            "text": "Great product, fast shipping. Only giving 4 stars because packaging could be better, but the product itself is perfect!",
+            "date": "4 days ago",
+            "helpful": 8
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Rachel Kim",
+            "handle": "@rachelkim",
+            "verified": true,
+            "platform": "none",
+            "rating": 5,
+            "text": "I was skeptical at first but WOW! This exceeded all my expectations. Already ordered two more as gifts for my friends.",
+            "date": "1 week ago",
+            "helpful": 42
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "David Miller",
+            "handle": "@davidm",
+            "verified": true,
+            "platform": "twitter",
+            "rating": 5,
+            "text": "Customer service is top notch. Had a question and they responded within hours. Product quality is excellent too!",
+            "date": "5 days ago",
+            "helpful": 15
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
