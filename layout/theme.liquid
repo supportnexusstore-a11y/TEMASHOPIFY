@@ -1,6 +1,5 @@
 <!doctype html>
 <html class="js" lang="{{ request.locale.iso_code }}">
-  {{ 'luxury-override.css' | asset_url | stylesheet_tag }}
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -297,6 +296,9 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+      {{ 'base.css' | asset_url | stylesheet_tag }}
+
+  {{ 'luxury-override.css' | asset_url | stylesheet_tag }}
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
