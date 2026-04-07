@@ -1,1 +1,52 @@
-{"sections":{"hero":{"type":"image-banner","blocks":{"heading":{"type":"heading","settings":{"heading":"NEXUS","heading_size":"hxxl"}},"text":{"type":"text","settings":{"text":"Minimal. Powerful. Premium.","text_style":"subtitle"}},"buttons":{"type":"buttons","settings":{"button_label_1":"Shop now","button_link_1":"/collections/all"}}},"block_order":["heading","text","buttons"],"settings":{"image_overlay_opacity":60,"image_height":"large","desktop_content_alignment":"center"}}},"order":["hero"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "NEXUS",
+            "heading_size": "hxxl"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "Minimal. Powerful. Premium.",
+            "text_style": "subtitle"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop now",
+            "button_link_1": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "buttons"
+      ],
+      "settings": {
+        "image_overlay_opacity": 60,
+        "image_height": "large",
+        "desktop_content_alignment": "center"
+      }
+    }
+  },
+  "order": [
+    "hero"
+  ]
+}
