@@ -1,1 +1,168 @@
-{"sections":{"image_banner_6pHN7t":{"type":"image-banner","name":"t:sections.image-banner.presets.name","settings":{"image":"shopify:\/\/shop_images\/3189c412-048c-401b-90c2-b0bfb0763f27_944a6939-0be3-45f8-9541-8e51598f3967.png","image_overlay_opacity":0,"image_height":"adapt","image_behavior":"none","desktop_content_position":"middle-center","desktop_content_alignment":"center","show_text_box":false,"color_scheme":"","stack_images_on_mobile":true,"mobile_content_alignment":"center","show_text_below":true}},"17731795098d5ad3ba":{"type":"_blocks","blocks":{"ai_gen_block_f5663af_if4a3e":{"type":"ai_gen_block_f5663af","settings":{"heading":"Best Sellers","subheading":"Shop our most popular products","product_list":["r36s-retro-handheld-video-game-console-3-5-inch-ips-screen-128gb-preloaded-games-portable-pocket-player-with-linux-system","factory-sales-7-in-1-smart-watch-earphone-eu-magnetic-wireless-charger-power-bank-set-6in1-accessories-gift-box-6en1-for-iphone","jj-r36h-rk3326-3-5-inch-ips-screen-handheld-retro-gaming-console-64gb-15000-built-in-games-linux-rgb20s-mini","foreign-trade-air-max-magnetic-ear-cup-head-mounted-wireless-for-headset-pop-up-window-sports-breathable-shockproof"],"show_vendor":false,"desktop_width_percent":100,"container_width":1200,"columns_mobile":"2","grid_gap":20,"section_padding_top":40,"section_padding_bottom":40,"heading_alignment":"center","heading_size":36,"heading_color":"#121212","heading_spacing":40,"subheading_size":16,"subheading_color":"#666666","subheading_spacing":8,"product_text_alignment":"left","card_border_radius":0,"card_padding":16,"card_background_color":"#ffffff","product_title_size":16,"product_title_color":"#121212","product_vendor_size":12,"product_vendor_color":"#666666","product_price_size":16,"product_price_color":"#121212","background_color":"#ffffff"},"blocks":{}}},"block_order":["ai_gen_block_f5663af_if4a3e"],"settings":{}},"177546864151b4b5d3":{"type":"_blocks","blocks":{"ai_gen_block_e1917c2_hYFxnn":{"type":"ai_gen_block_e1917c2","settings":{"section_title":"Compra por categoria","card_1_image":"shopify:\/\/shop_images\/2ffe804b-4b13-41b0-ba63-74a5a5739a9d.png","card_1_label":"Consolas Retro","card_1_url":"","card_2_image":"shopify:\/\/shop_images\/cab8c4c4-2015-468e-a64a-29d92afab1d7.png","card_2_label":"Acessórios para carro","card_2_url":"","card_3_image":"shopify:\/\/shop_images\/96317f67-ac24-4af0-99b9-359d72d6c562.png","card_3_label":"Fones e smartwatch","card_3_url":"","card_4_image":"shopify:\/\/shop_images\/27a254ad-df5a-4413-873c-0e7869c41fe9.png","card_4_label":"kits e conjuntos","card_4_url":"","card_5_image":"shopify:\/\/shop_images\/01947068-24ef-40f7-b594-00f4297f1477.png","card_5_label":"outros produtos","card_5_url":""},"blocks":{}}},"block_order":["ai_gen_block_e1917c2_hYFxnn"],"settings":{}},"177546952052ea9b00":{"type":"apps","blocks":{"judge_me_reviews_cards_carousel_Qd7Ymd":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/cards_carousel\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"show_sample_reviews":true,"reviews_selection":"all","products":["2024-factory-wired-carplay-upgrade-new-fashion-plug-play-wireless-adapter-dongle-converts-wireless-cars","bqcc-7-universal-car-radio-wireless-carplay-android-auto-mirrorlink-portable-bt-usb-aux-with-sun-visor-multimedia-car-player","magnetic-leather-wallet-card-holder-phone-case-coin-purse-case","r36s-retro-handheld-video-game-console-3-5-inch-ips-screen-128gb-preloaded-games-portable-pocket-player-with-linux-system","s-q21-handheld-game-console-500-in-1-games-3-inch-screen-retro-arcade-childhood-classic-game-console-for-kids-children-gift","jj-r36h-rk3326-3-5-inch-ips-screen-handheld-retro-gaming-console-64gb-15000-built-in-games-linux-rgb20s-mini","factory-sales-7-in-1-smart-watch-earphone-eu-magnetic-wireless-charger-power-bank-set-6in1-accessories-gift-box-6en1-for-iphone-1","foreign-trade-air-max-magnetic-ear-cup-head-mounted-wireless-for-headset-pop-up-window-sports-breathable-shockproof","original-airs-pro-bluetooth-earphones-gaming-earphones-wireless-bluetooth-headset-suitable-1","50000mah-power-bank-20w-powerbank-magnetic-wireless-fast-charging-external-battery-pack-type-c-for-iphone13-14-15-xiaomi-samsung"],"star_rating":"all","show_review_media":true,"display_order":"media_first","no_image_fallback":"review_text_only","max_reviews":30,"review_length":"large","text_size":"small","image_ratio":"1","reviews_shown":5,"show_reviewer_name":true,"show_product_name":true,"hide_arrows_mobile":true,"arrows_position":"sides","max_width":1600,"corner_styling":"soft","header_text_color":"#000000","text_color":"#000000","card_color":"#f9f9f9","stars_color":"","arrows_color":"#000000","transition_speed":5,"header_text":"O que das pessoas dizem dos produtos da NEXUS","show_average_rating":true}}},"block_order":["judge_me_reviews_cards_carousel_Qd7Ymd"],"settings":{"include_margins":false}}},"order":["image_banner_6pHN7t","17731795098d5ad3ba","177546864151b4b5d3","177546952052ea9b00"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner_6pHN7t": {
+      "type": "image-banner",
+      "name": "t:sections.image-banner.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/3189c412-048c-401b-90c2-b0bfb0763f27_944a6939-0be3-45f8-9541-8e51598f3967.png",
+        "image_overlay_opacity": 0,
+        "image_height": "adapt",
+        "image_behavior": "none",
+        "desktop_content_position": "middle-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "",
+        "stack_images_on_mobile": true,
+        "mobile_content_alignment": "center",
+        "show_text_below": true
+      }
+    },
+    "17731795098d5ad3ba": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f5663af_if4a3e": {
+          "type": "ai_gen_block_f5663af",
+          "settings": {
+            "heading": "Best Sellers",
+            "subheading": "Shop our most popular products",
+            "product_list": [
+              "consola-nexus-r36",
+              "factory-sales-7-in-1-smart-watch-earphone-eu-magnetic-wireless-charger-power-bank-set-6in1-accessories-gift-box-6en1-for-iphone",
+              "jj-r36h-rk3326-3-5-inch-ips-screen-handheld-retro-gaming-console-64gb-15000-built-in-games-linux-rgb20s-mini",
+              "foreign-trade-air-max-magnetic-ear-cup-head-mounted-wireless-for-headset-pop-up-window-sports-breathable-shockproof"
+            ],
+            "show_vendor": false,
+            "desktop_width_percent": 100,
+            "container_width": 1200,
+            "columns_mobile": "2",
+            "grid_gap": 20,
+            "section_padding_top": 40,
+            "section_padding_bottom": 40,
+            "heading_alignment": "center",
+            "heading_size": 36,
+            "heading_color": "#121212",
+            "heading_spacing": 40,
+            "subheading_size": 16,
+            "subheading_color": "#666666",
+            "subheading_spacing": 8,
+            "product_text_alignment": "left",
+            "card_border_radius": 0,
+            "card_padding": 16,
+            "card_background_color": "#ffffff",
+            "product_title_size": 16,
+            "product_title_color": "#121212",
+            "product_vendor_size": 12,
+            "product_vendor_color": "#666666",
+            "product_price_size": 16,
+            "product_price_color": "#121212",
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f5663af_if4a3e"
+      ],
+      "settings": {}
+    },
+    "177546864151b4b5d3": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e1917c2_hYFxnn": {
+          "type": "ai_gen_block_e1917c2",
+          "settings": {
+            "section_title": "Compra por categoria",
+            "card_1_image": "shopify://shop_images/2ffe804b-4b13-41b0-ba63-74a5a5739a9d.png",
+            "card_1_label": "Consolas Retro",
+            "card_1_url": "",
+            "card_2_image": "shopify://shop_images/cab8c4c4-2015-468e-a64a-29d92afab1d7.png",
+            "card_2_label": "Acessórios para carro",
+            "card_2_url": "",
+            "card_3_image": "shopify://shop_images/96317f67-ac24-4af0-99b9-359d72d6c562.png",
+            "card_3_label": "Fones e smartwatch",
+            "card_3_url": "",
+            "card_4_image": "shopify://shop_images/27a254ad-df5a-4413-873c-0e7869c41fe9.png",
+            "card_4_label": "kits e conjuntos",
+            "card_4_url": "",
+            "card_5_image": "shopify://shop_images/01947068-24ef-40f7-b594-00f4297f1477.png",
+            "card_5_label": "outros produtos",
+            "card_5_url": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e1917c2_hYFxnn"
+      ],
+      "settings": {}
+    },
+    "177546952052ea9b00": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_Qd7Ymd": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "reviews_selection": "all",
+            "products": [
+              "2024-factory-wired-carplay-upgrade-new-fashion-plug-play-wireless-adapter-dongle-converts-wireless-cars",
+              "bqcc-7-universal-car-radio-wireless-carplay-android-auto-mirrorlink-portable-bt-usb-aux-with-sun-visor-multimedia-car-player",
+              "magnetic-leather-wallet-card-holder-phone-case-coin-purse-case",
+              "consola-nexus-r36",
+              "s-q21-handheld-game-console-500-in-1-games-3-inch-screen-retro-arcade-childhood-classic-game-console-for-kids-children-gift",
+              "jj-r36h-rk3326-3-5-inch-ips-screen-handheld-retro-gaming-console-64gb-15000-built-in-games-linux-rgb20s-mini",
+              "factory-sales-7-in-1-smart-watch-earphone-eu-magnetic-wireless-charger-power-bank-set-6in1-accessories-gift-box-6en1-for-iphone-1",
+              "foreign-trade-air-max-magnetic-ear-cup-head-mounted-wireless-for-headset-pop-up-window-sports-breathable-shockproof",
+              "original-airs-pro-bluetooth-earphones-gaming-earphones-wireless-bluetooth-headset-suitable-1",
+              "50000mah-power-bank-20w-powerbank-magnetic-wireless-fast-charging-external-battery-pack-type-c-for-iphone13-14-15-xiaomi-samsung"
+            ],
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 30,
+            "review_length": "large",
+            "text_size": "small",
+            "image_ratio": "1",
+            "reviews_shown": 5,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "sides",
+            "max_width": 1600,
+            "corner_styling": "soft",
+            "header_text_color": "#000000",
+            "text_color": "#000000",
+            "card_color": "#f9f9f9",
+            "stars_color": "",
+            "arrows_color": "#000000",
+            "transition_speed": 5,
+            "header_text": "O que das pessoas dizem dos produtos da NEXUS",
+            "show_average_rating": true
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_Qd7Ymd"
+      ],
+      "settings": {
+        "include_margins": false
+      }
+    }
+  },
+  "order": [
+    "image_banner_6pHN7t",
+    "17731795098d5ad3ba",
+    "177546864151b4b5d3",
+    "177546952052ea9b00"
+  ]
+}
