@@ -339,14 +339,7 @@
                     {%- if block.settings.show_compare_at and variant_for_price.compare_at_price != blank and variant_for_price.compare_at_price > variant_for_price.price -%}
                       <span class="price-item price-item--regular price-item--compare" style="text-decoration: line-through; opacity: 0.8; margin-right: 0.5rem;">{{ variant_for_price.compare_at_price | money }}</span>
                     {%- endif -%}
-                    {%- render 'price',
-                      product: product,
-                      placeholder: placeholder,
-                      use_variant: true,
-                      show_badges: block.settings.show_discount | default: false,
-                      show_compare_at: false,
-                      price_class: 'price--large'
-                    -%}
+                    {%- render 'price', product: product, placeholder: placeholder, use_variant: true, show_badges: block.settings.show_discount, default: false, show_compare_at: false, price_class: 'price--large' -%}
                     {%- if block.settings.show_discount and discount_percent > 0 and variant_for_price.compare_at_price > variant_for_price.price -%}
                       {%- assign badge_label_raw = block.settings.discount_badge_label | default: '-%' -%}
                       {%- if badge_label_raw == blank -%}
@@ -2324,3 +2317,23 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%- render 'price',
+                          product: product,
+                          placeholder: placeholder,
+                          use_variant: true,
+                          show_badges: block.settings.show_discount | default: false,
+                          show_compare_at: false,
+                          price_class: 'price--large'
+                        -%}
+  to: "{%- render 'price', product: product, placeholder: placeholder, use_variant:
+    true, show_badges: block.settings.show_discount, default: false, show_compare_at:
+    false, price_class: 'price--large' -%}"
+  position: 21740..21937
+{% endcomment %}
